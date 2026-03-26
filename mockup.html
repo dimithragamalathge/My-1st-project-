@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Property Manager — Design Mockup</title>
+<title>Dover Cottage — Staff App Mockup</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -136,6 +136,38 @@
     background: var(--gold);
     position: absolute;
     top: 10px; right: 22px;
+  }
+
+  /* ─── DOVER COTTAGE BRANDING ─────────────────────── */
+  .dc-brand-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 16px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+  .dc-logo-wrap {
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    color: white;
+  }
+  .dc-logo-wrap svg { width: 100%; height: 100%; }
+  .dc-property-name {
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.1;
+  }
+  .dc-location {
+    color: rgba(255,255,255,0.5);
+    font-size: 10px;
+    margin-top: 4px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   /* ─── SCREEN 1: DASHBOARD ─────────────────────── */
@@ -787,7 +819,7 @@
 </head>
 <body>
 
-<p class="page-title">Property Manager — Design Preview</p>
+<p class="page-title">Dover Cottage — Staff App · Design Preview</p>
 
 <div class="phone-row">
 
@@ -804,9 +836,35 @@
 
       <div class="screen-content">
         <div class="dash-header">
+          <!-- Dover Cottage Brand Header -->
+          <div class="dc-brand-header">
+            <div class="dc-logo-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <defs>
+                  <path id="topArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
+                  <path id="botArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
+                </defs>
+                <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+                <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+                <circle cx="13" cy="50" r="2" fill="currentColor" opacity="0.8"/>
+                <circle cx="87" cy="50" r="2" fill="currentColor" opacity="0.8"/>
+                <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
+                  <textPath href="#topArc" startOffset="18%">DOVER</textPath>
+                </text>
+                <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
+                  <textPath href="#botArc" startOffset="11%">COTTAGE</textPath>
+                </text>
+                <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
+                <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
+              </svg>
+            </div>
+            <div>
+              <div class="dc-property-name">Dover Cottage</div>
+              <div class="dc-location">Nuwara Eliya · Sri Lanka</div>
+            </div>
+          </div>
           <div class="dash-greeting">Good morning, Maria 👋</div>
-          <div class="dash-title">Property Overview</div>
-          <div class="dash-subtitle">Tuesday, 24 March 2026</div>
+          <div class="dash-subtitle">Wednesday, 25 March 2026</div>
         </div>
 
         <!-- Alert banner -->
