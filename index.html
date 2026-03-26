@@ -529,6 +529,79 @@
     color: var(--navy);
   }
 
+  /* ─── ENHANCED EXPENSE FORM ─────────────────────── */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .cat-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: white;
+    border-radius: 14px;
+    padding: 12px 8px;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .cat-option.selected {
+    background: #EEF2FF;
+    border-color: var(--navy);
+  }
+  .cat-option-icon { font-size: 22px; }
+  .cat-option-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+  .cat-option.selected .cat-option-label { color: var(--navy); }
+
+  .receipt-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .receipt-action-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    border-radius: 14px;
+    padding: 14px 8px;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .receipt-action-icon { font-size: 24px; }
+  .receipt-action-label { font-size: 11px; font-weight: 700; color: var(--muted); }
+
+  .receipt-attached {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #F0FDF4;
+    border: 1.5px solid #86EFAC;
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-top: 8px;
+  }
+  .receipt-thumb {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: #DCFCE7;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .receipt-attached-info { flex: 1; }
+  .receipt-attached-name { font-size: 13px; font-weight: 700; color: #166534; }
+  .receipt-attached-sub { font-size: 11px; color: #4ADE80; margin-top: 1px; }
+  .receipt-attached-remove { font-size: 18px; color: #86EFAC; }
+
   /* ─── SCREEN 3: EXPENSE LOG ─────────────────────── */
 
   .exp-header {
@@ -1299,7 +1372,7 @@
 
 
   <!-- ═══════════════════════════════════════
-       SCREEN 6: LOG EXPENSE FORM
+       SCREEN 6: LOG EXPENSE FORM (ENHANCED)
   ═══════════════════════════════════════ -->
   <div class="phone-wrap">
     <div class="screen-label">6 — Log an Expense</div>
@@ -1319,6 +1392,8 @@
         </div>
 
         <div class="form-body">
+
+          <!-- Amount -->
           <div class="form-group">
             <div class="form-label">Amount Spent</div>
             <div class="amount-input">
@@ -1328,28 +1403,86 @@
             </div>
           </div>
 
+          <!-- Category grid -->
           <div class="form-group">
             <div class="form-label">Category</div>
+            <div class="cat-grid">
+              <div class="cat-option selected">
+                <div class="cat-option-icon">🧹</div>
+                <div class="cat-option-label">Cleaning</div>
+              </div>
+              <div class="cat-option">
+                <div class="cat-option-icon">🛏</div>
+                <div class="cat-option-label">Linens</div>
+              </div>
+              <div class="cat-option">
+                <div class="cat-option-icon">☕</div>
+                <div class="cat-option-label">Kitchen</div>
+              </div>
+              <div class="cat-option">
+                <div class="cat-option-icon">🧴</div>
+                <div class="cat-option-label">Toiletries</div>
+              </div>
+              <div class="cat-option">
+                <div class="cat-option-icon">🔧</div>
+                <div class="cat-option-label">Maintenance</div>
+              </div>
+              <div class="cat-option">
+                <div class="cat-option-icon">📦</div>
+                <div class="cat-option-label">Other</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <div class="form-label">What was it for?</div>
+            <div class="text-field" style="min-height:52px">Dishwasher tablets and floor cleaner</div>
+          </div>
+
+          <!-- Logged by -->
+          <div class="form-group">
+            <div class="form-label">Logged by</div>
+            <div class="people-row">
+              <div class="person-chip selected">👩 Maria</div>
+              <div class="person-chip">👨 James</div>
+              <div class="person-chip">🧑 Saman</div>
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div class="form-group">
+            <div class="form-label">Date</div>
             <div class="select-field">
-              <span class="select-val">🧹 Cleaning Products</span>
+              <span class="select-val">📅 Today — 25 March 2026</span>
               <span class="select-arrow">›</span>
             </div>
           </div>
 
-          <div class="form-group">
-            <div class="form-label">What was it for?</div>
-            <div class="text-field" style="min-height:60px">Dishwasher tablets and floor cleaner from Walmart</div>
-          </div>
-
+          <!-- Receipt Photo -->
           <div class="form-group">
             <div class="form-label">Receipt Photo</div>
-            <div class="receipt-upload">
-              <div class="receipt-icon">📷</div>
-              <div class="receipt-upload-text">Tap to photograph receipt</div>
-              <div class="receipt-upload-sub">Opens your phone's camera directly</div>
-              <div class="receipt-cta">Open Camera</div>
+            <div class="receipt-actions">
+              <div class="receipt-action-btn">
+                <div class="receipt-action-icon">📷</div>
+                <div class="receipt-action-label">Take Photo</div>
+              </div>
+              <div class="receipt-action-btn">
+                <div class="receipt-action-icon">🖼</div>
+                <div class="receipt-action-label">Choose from Gallery</div>
+              </div>
+            </div>
+            <!-- Attached state — shown after a photo is taken -->
+            <div class="receipt-attached">
+              <div class="receipt-thumb">🧾</div>
+              <div class="receipt-attached-info">
+                <div class="receipt-attached-name">Receipt attached ✓</div>
+                <div class="receipt-attached-sub">Tap to view or retake</div>
+              </div>
+              <div class="receipt-attached-remove">×</div>
             </div>
           </div>
+
         </div>
 
         <div class="submit-btn">Save Expense →</div>
