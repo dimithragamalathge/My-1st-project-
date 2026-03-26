@@ -472,6 +472,63 @@
     text-transform: uppercase;
   }
 
+  /* ─── BREAKAGE FORM ─────────────────────── */
+  .breakage-item-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #FFF1F2;
+    border: 1.5px solid #FECDD3;
+    border-radius: 16px;
+    padding: 14px 16px;
+  }
+  .bi-icon { font-size: 28px; flex-shrink: 0; }
+  .bi-info { flex: 1; }
+  .bi-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .bi-count { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .stepper {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 16px;
+    padding: 10px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1.5px solid var(--border);
+    gap: 0;
+  }
+  .stepper-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #FEF2F2;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700;
+    color: #DC2626;
+    flex-shrink: 0;
+  }
+  .stepper-val {
+    flex: 1;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .people-row { display: flex; gap: 8px; }
+  .person-chip {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: white; border-radius: 12px; padding: 10px 8px;
+    border: 1.5px solid var(--border);
+    font-size: 12px; font-weight: 600; color: var(--muted);
+  }
+  .person-chip.selected {
+    background: #EEF2FF;
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+
   /* ─── SCREEN 3: EXPENSE LOG ─────────────────────── */
 
   .exp-header {
@@ -934,17 +991,18 @@
             <div class="back-btn">‹</div>
             <div class="detail-header-text">
               <div class="detail-title">📦 Inventory</div>
-              <div class="detail-sub">Owner access · Track counts & breakages</div>
+              <div class="detail-sub">Log breakages freely · Only owner edits counts</div>
             </div>
           </div>
           <div class="inv-tabs">
             <div class="inv-tab">Consumable Supplies</div>
-            <div class="inv-tab active">Property Items 🔒</div>
+            <div class="inv-tab active">Property Items</div>
           </div>
         </div>
 
-        <div style="padding:12px 16px 4px;display:flex;align-items:center;gap:6px">
-          <div class="owner-badge">🔒 Owner Access Only</div>
+        <div style="padding:10px 16px 4px;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:11px;color:var(--muted);font-weight:600">Tap to report a broken item</div>
+          <div class="owner-badge">🔒 Add items: Owner only</div>
         </div>
 
         <div class="item-list" style="padding-top:8px">
@@ -957,6 +1015,7 @@
               </div>
               <div class="prop-right">
                 <div class="prop-qty">16</div>
+                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
               </div>
             </div>
             <div class="breakage-btn">⚠ Log Breakage</div>
@@ -971,6 +1030,7 @@
               </div>
               <div class="prop-right">
                 <div class="prop-qty damaged">22</div>
+                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
               </div>
             </div>
             <div class="breakage-btn">⚠ Log Breakage</div>
@@ -985,6 +1045,7 @@
               </div>
               <div class="prop-right">
                 <div class="prop-qty damaged">19</div>
+                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
               </div>
             </div>
             <div class="breakage-btn">⚠ Log Breakage</div>
@@ -999,6 +1060,7 @@
               </div>
               <div class="prop-right">
                 <div class="prop-qty">16</div>
+                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
               </div>
             </div>
             <div class="breakage-btn">⚠ Log Breakage</div>
@@ -1013,6 +1075,7 @@
               </div>
               <div class="prop-right">
                 <div class="prop-qty">20</div>
+                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
               </div>
             </div>
             <div class="breakage-btn">⚠ Log Breakage</div>
@@ -1027,6 +1090,7 @@
               </div>
               <div class="prop-right">
                 <div class="prop-qty">32</div>
+                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
               </div>
             </div>
             <div class="breakage-btn">⚠ Log Breakage</div>
@@ -1053,10 +1117,87 @@
 
 
   <!-- ═══════════════════════════════════════
-       SCREEN 4: EXPENSE LOG
+       SCREEN 4: LOG BREAKAGE FORM
   ═══════════════════════════════════════ -->
   <div class="phone-wrap">
-    <div class="screen-label">4 — Expense Log</div>
+    <div class="screen-label">4 — Log a Breakage</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>●●●  WiFi  🔋</span>
+      </div>
+
+      <div class="screen-content">
+        <div class="form-header" style="background:#991B1B">
+          <div class="back-btn">‹</div>
+          <div>
+            <div class="form-title">Log a Breakage</div>
+            <div style="color:rgba(255,255,255,0.55);font-size:12px;margin-top:2px">Record what broke and who reported it</div>
+          </div>
+        </div>
+
+        <div class="form-body">
+
+          <!-- Item pre-filled from tapping -->
+          <div class="form-group">
+            <div class="form-label">Item</div>
+            <div class="breakage-item-banner">
+              <div class="bi-icon">🍽</div>
+              <div class="bi-info">
+                <div class="bi-name">Dinner Plates</div>
+                <div class="bi-count">22 remaining · 2 already broken</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- How many broken -->
+          <div class="form-group">
+            <div class="form-label">How many broke?</div>
+            <div class="stepper">
+              <div class="stepper-btn">−</div>
+              <div class="stepper-val">1</div>
+              <div class="stepper-btn">+</div>
+            </div>
+          </div>
+
+          <!-- What happened -->
+          <div class="form-group">
+            <div class="form-label">What happened?</div>
+            <div class="text-field" style="min-height:56px">Dropped while clearing table after checkout</div>
+          </div>
+
+          <!-- Logged by -->
+          <div class="form-group">
+            <div class="form-label">Reported by</div>
+            <div class="people-row">
+              <div class="person-chip">👩 Maria</div>
+              <div class="person-chip selected">👨 James</div>
+              <div class="person-chip">🧑 Saman</div>
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div class="form-group">
+            <div class="form-label">Date</div>
+            <div class="select-field">
+              <span class="select-val">📅 Today — 25 March 2026</span>
+              <span class="select-arrow">›</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="submit-btn" style="background:#991B1B;box-shadow:0 6px 20px rgba(153,27,27,0.35)">Save Breakage →</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 5: EXPENSE LOG
+  ═══════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="screen-label">5 — Expense Log</div>
     <div class="phone">
       <div class="status-bar">
         <span>9:41</span>
@@ -1158,10 +1299,10 @@
 
 
   <!-- ═══════════════════════════════════════
-       SCREEN 5: LOG EXPENSE FORM
+       SCREEN 6: LOG EXPENSE FORM
   ═══════════════════════════════════════ -->
   <div class="phone-wrap">
-    <div class="screen-label">5 — Log an Expense</div>
+    <div class="screen-label">6 — Log an Expense</div>
     <div class="phone">
       <div class="status-bar">
         <span>9:41</span>
