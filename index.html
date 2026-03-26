@@ -398,6 +398,80 @@
     font-weight: 300;
   }
 
+  /* ─── INVENTORY TABS ─────────────────────── */
+  .inv-tabs {
+    display: flex;
+    margin: 0;
+  }
+  .inv-tab {
+    flex: 1;
+    text-align: center;
+    padding: 11px 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.45);
+    border-bottom: 2.5px solid transparent;
+    letter-spacing: 0.04em;
+  }
+  .inv-tab.active {
+    color: white;
+    border-bottom-color: var(--gold);
+  }
+
+  /* ─── PROPERTY ITEMS ─────────────────────── */
+  .prop-row {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  .prop-row.has-breakage::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--red);
+  }
+  .prop-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .prop-info { flex: 1; }
+  .prop-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .prop-counts { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .prop-counts span { color: var(--red); font-weight: 700; }
+  .prop-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .prop-qty { font-size: 20px; font-weight: 800; color: var(--navy); line-height: 1; }
+  .prop-qty.damaged { color: var(--red); }
+  .breakage-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #FEF2F2;
+    color: #DC2626;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
+  .owner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #EEF2FF;
+    color: var(--navy);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
   /* ─── SCREEN 3: EXPENSE LOG ─────────────────────── */
 
   .exp-header {
@@ -723,10 +797,10 @@
 
 
   <!-- ═══════════════════════════════════════
-       SCREEN 2: INVENTORY DETAIL
+       SCREEN 2: INVENTORY — CONSUMABLE SUPPLIES
   ═══════════════════════════════════════ -->
   <div class="phone-wrap">
-    <div class="screen-label">2 — Inventory Detail (Toiletries)</div>
+    <div class="screen-label">2 — Consumable Supplies</div>
     <div class="phone">
       <div class="status-bar">
         <span>9:41</span>
@@ -734,11 +808,17 @@
       </div>
 
       <div class="screen-content">
-        <div class="detail-header">
-          <div class="back-btn">‹</div>
-          <div class="detail-header-text">
-            <div class="detail-title">🧴 Toiletries & Bathroom</div>
-            <div class="detail-sub">6 items · 2 need restocking · Tap any item to update</div>
+        <div class="detail-header" style="flex-direction:column;align-items:stretch;gap:0">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+            <div class="back-btn">‹</div>
+            <div class="detail-header-text">
+              <div class="detail-title">📦 Inventory</div>
+              <div class="detail-sub">Tap any item to update its count</div>
+            </div>
+          </div>
+          <div class="inv-tabs">
+            <div class="inv-tab active">Consumable Supplies</div>
+            <div class="inv-tab">Property Items 🔒</div>
           </div>
         </div>
 
@@ -768,18 +848,6 @@
           </div>
 
           <div class="item-row">
-            <div class="item-icon">🪥</div>
-            <div class="item-info">
-              <div class="item-name">Body Wash</div>
-              <div class="item-unit">bottles · min. 4</div>
-            </div>
-            <div class="item-qty-wrap">
-              <div class="item-qty">8</div>
-              <div class="item-status status-ok">Good</div>
-            </div>
-          </div>
-
-          <div class="item-row">
             <div class="item-icon">🫧</div>
             <div class="item-info">
               <div class="item-name">Hand Soap</div>
@@ -788,6 +856,18 @@
             <div class="item-qty-wrap">
               <div class="item-qty">6</div>
               <div class="item-status status-ok">Good</div>
+            </div>
+          </div>
+
+          <div class="item-row low">
+            <div class="item-icon">🧹</div>
+            <div class="item-info">
+              <div class="item-name">Floor Cleaner</div>
+              <div class="item-unit">bottles · min. 3</div>
+            </div>
+            <div class="item-qty-wrap">
+              <div class="item-qty low-text">1</div>
+              <div class="item-status status-low">Low</div>
             </div>
           </div>
 
@@ -804,20 +884,19 @@
           </div>
 
           <div class="item-row">
-            <div class="item-icon">🪒</div>
+            <div class="item-icon">☕</div>
             <div class="item-info">
-              <div class="item-name">Disposable Razors</div>
-              <div class="item-unit">units · min. 6</div>
+              <div class="item-name">Tea Bags</div>
+              <div class="item-unit">packs · min. 5</div>
             </div>
             <div class="item-qty-wrap">
-              <div class="item-qty">9</div>
+              <div class="item-qty">8</div>
               <div class="item-status status-ok">Good</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- FAB -->
       <div class="fab">+</div>
 
       <div class="bottom-nav">
@@ -839,10 +918,145 @@
 
 
   <!-- ═══════════════════════════════════════
-       SCREEN 3: EXPENSE LOG
+       SCREEN 2B: INVENTORY — PROPERTY ITEMS
   ═══════════════════════════════════════ -->
   <div class="phone-wrap">
-    <div class="screen-label">3 — Expense Log</div>
+    <div class="screen-label">3 — Property Items (Owner Only)</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>●●●  WiFi  🔋</span>
+      </div>
+
+      <div class="screen-content">
+        <div class="detail-header" style="flex-direction:column;align-items:stretch;gap:0">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+            <div class="back-btn">‹</div>
+            <div class="detail-header-text">
+              <div class="detail-title">📦 Inventory</div>
+              <div class="detail-sub">Owner access · Track counts & breakages</div>
+            </div>
+          </div>
+          <div class="inv-tabs">
+            <div class="inv-tab">Consumable Supplies</div>
+            <div class="inv-tab active">Property Items 🔒</div>
+          </div>
+        </div>
+
+        <div style="padding:12px 16px 4px;display:flex;align-items:center;gap:6px">
+          <div class="owner-badge">🔒 Owner Access Only</div>
+        </div>
+
+        <div class="item-list" style="padding-top:8px">
+          <div class="prop-row">
+            <div class="prop-top">
+              <div class="item-icon">🛏</div>
+              <div class="prop-info">
+                <div class="prop-name">Bed Sheets</div>
+                <div class="prop-counts">Started with 16 · No breakages</div>
+              </div>
+              <div class="prop-right">
+                <div class="prop-qty">16</div>
+              </div>
+            </div>
+            <div class="breakage-btn">⚠ Log Breakage</div>
+          </div>
+
+          <div class="prop-row has-breakage">
+            <div class="prop-top">
+              <div class="item-icon">🍽</div>
+              <div class="prop-info">
+                <div class="prop-name">Dinner Plates</div>
+                <div class="prop-counts">Started with 24 · <span>2 broken</span></div>
+              </div>
+              <div class="prop-right">
+                <div class="prop-qty damaged">22</div>
+              </div>
+            </div>
+            <div class="breakage-btn">⚠ Log Breakage</div>
+          </div>
+
+          <div class="prop-row has-breakage">
+            <div class="prop-top">
+              <div class="item-icon">🥂</div>
+              <div class="prop-info">
+                <div class="prop-name">Glasses</div>
+                <div class="prop-counts">Started with 20 · <span>1 broken</span></div>
+              </div>
+              <div class="prop-right">
+                <div class="prop-qty damaged">19</div>
+              </div>
+            </div>
+            <div class="breakage-btn">⚠ Log Breakage</div>
+          </div>
+
+          <div class="prop-row">
+            <div class="prop-top">
+              <div class="item-icon">🍴</div>
+              <div class="prop-info">
+                <div class="prop-name">Cutlery Sets</div>
+                <div class="prop-counts">Started with 16 · No breakages</div>
+              </div>
+              <div class="prop-right">
+                <div class="prop-qty">16</div>
+              </div>
+            </div>
+            <div class="breakage-btn">⚠ Log Breakage</div>
+          </div>
+
+          <div class="prop-row">
+            <div class="prop-top">
+              <div class="item-icon">🛁</div>
+              <div class="prop-info">
+                <div class="prop-name">Bath Towels</div>
+                <div class="prop-counts">Started with 20 · No breakages</div>
+              </div>
+              <div class="prop-right">
+                <div class="prop-qty">20</div>
+              </div>
+            </div>
+            <div class="breakage-btn">⚠ Log Breakage</div>
+          </div>
+
+          <div class="prop-row">
+            <div class="prop-top">
+              <div class="item-icon">🛋</div>
+              <div class="prop-info">
+                <div class="prop-name">Pillowcases</div>
+                <div class="prop-counts">Started with 32 · No breakages</div>
+              </div>
+              <div class="prop-right">
+                <div class="prop-qty">32</div>
+              </div>
+            </div>
+            <div class="breakage-btn">⚠ Log Breakage</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <div class="nav-item">
+          <div class="nav-icon">📊</div>
+          <div class="nav-label">Dashboard</div>
+        </div>
+        <div class="nav-item active">
+          <div class="nav-icon">📦</div>
+          <div class="nav-label">Inventory</div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon">🧾</div>
+          <div class="nav-label">Expenses</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 4: EXPENSE LOG
+  ═══════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="screen-label">4 — Expense Log</div>
     <div class="phone">
       <div class="status-bar">
         <span>9:41</span>
@@ -858,11 +1072,11 @@
         <!-- Summary cards -->
         <div class="exp-summary-cards">
           <div class="exp-sum-card">
-            <div class="exp-sum-amount">$847</div>
+            <div class="exp-sum-amount">Rs. 42,500</div>
             <div class="exp-sum-label">March Total</div>
           </div>
           <div class="exp-sum-card">
-            <div class="exp-sum-amount" style="color:var(--gold)">$312</div>
+            <div class="exp-sum-amount" style="color:var(--gold)">Rs. 18,200</div>
             <div class="exp-sum-label">Cleaning</div>
           </div>
           <div class="exp-sum-card">
@@ -891,7 +1105,7 @@
               <div class="exp-meta">Maria · Mar 22 · Cleaning</div>
             </div>
             <div class="exp-right">
-              <div class="exp-amount">$312</div>
+              <div class="exp-amount">Rs. 18,200</div>
               <div class="receipt-chip">📷 Receipt</div>
             </div>
           </div>
@@ -903,7 +1117,7 @@
               <div class="exp-meta">James · Mar 18 · Kitchen</div>
             </div>
             <div class="exp-right">
-              <div class="exp-amount">$89</div>
+              <div class="exp-amount">Rs. 5,400</div>
               <div class="receipt-chip">📷 Receipt</div>
             </div>
           </div>
@@ -915,7 +1129,7 @@
               <div class="exp-meta">Maria · Mar 10 · Linens</div>
             </div>
             <div class="exp-right">
-              <div class="exp-amount">$446</div>
+              <div class="exp-amount">Rs. 12,800</div>
               <div class="receipt-chip">📷 Receipt</div>
             </div>
           </div>
@@ -944,10 +1158,10 @@
 
 
   <!-- ═══════════════════════════════════════
-       SCREEN 4: LOG EXPENSE FORM
+       SCREEN 5: LOG EXPENSE FORM
   ═══════════════════════════════════════ -->
   <div class="phone-wrap">
-    <div class="screen-label">4 — Log an Expense</div>
+    <div class="screen-label">5 — Log an Expense</div>
     <div class="phone">
       <div class="status-bar">
         <span>9:41</span>
@@ -967,8 +1181,8 @@
           <div class="form-group">
             <div class="form-label">Amount Spent</div>
             <div class="amount-input">
-              <div class="currency">$</div>
-              <div class="amount-val">47.50</div>
+              <div class="currency">Rs.</div>
+              <div class="amount-val">2,850</div>
               <div class="cursor"></div>
             </div>
           </div>
