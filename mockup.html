@@ -261,6 +261,66 @@
   }
   .stat-label { font-size: 10px; color: var(--muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 
+  /* ─── EXPENSE SNAPSHOT (dashboard) ─── */
+  .exp-snapshot {
+    margin: 0 16px 4px;
+    background: var(--navy);
+    border-radius: 20px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(27,42,74,0.2);
+  }
+  .exp-snapshot::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: rgba(200,144,42,0.12);
+    border-radius: 50%;
+  }
+  .exp-snapshot::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 30px;
+    width: 90px; height: 90px;
+    background: rgba(200,144,42,0.07);
+    border-radius: 50%;
+  }
+  .exp-snap-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  .exp-snap-label { color: rgba(255,255,255,0.55); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .exp-snap-amount { color: #fff; font-size: 26px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+  .exp-snap-sub { color: rgba(255,255,255,0.45); font-size: 11px; margin-top: 3px; }
+  .exp-snap-link {
+    background: rgba(200,144,42,0.2);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+  }
+  .exp-snap-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    position: relative;
+    z-index: 1;
+  }
+  .exp-bar-row { display: flex; align-items: center; gap: 8px; }
+  .exp-bar-cat { color: rgba(255,255,255,0.65); font-size: 11px; width: 76px; flex-shrink: 0; }
+  .exp-bar-track { flex: 1; height: 5px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+  .exp-bar-fill { height: 100%; border-radius: 10px; background: var(--gold); }
+  .exp-bar-val { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; width: 70px; text-align: right; flex-shrink: 0; }
+
   /* ─── SCREEN 2: INVENTORY DETAIL ─────────────────── */
 
   .detail-header {
@@ -571,6 +631,44 @@
           <div class="stat-card">
             <div class="stat-num" style="color:var(--green)">21</div>
             <div class="stat-label">All Good</div>
+          </div>
+        </div>
+
+        <!-- Expense snapshot -->
+        <div class="section-header">
+          <div class="section-title">Expenses — March 2026</div>
+          <div class="section-link">See All ›</div>
+        </div>
+        <div class="exp-snapshot">
+          <div class="exp-snap-top">
+            <div>
+              <div class="exp-snap-label">Total spent this month</div>
+              <div class="exp-snap-amount">Rs. 42,500</div>
+              <div class="exp-snap-sub">6 entries · by 2 team members</div>
+            </div>
+            <div class="exp-snap-link">View All ›</div>
+          </div>
+          <div class="exp-snap-bars">
+            <div class="exp-bar-row">
+              <div class="exp-bar-cat">🧹 Cleaning</div>
+              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:65%"></div></div>
+              <div class="exp-bar-val">Rs. 18,200</div>
+            </div>
+            <div class="exp-bar-row">
+              <div class="exp-bar-cat">🛏 Linens</div>
+              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:43%"></div></div>
+              <div class="exp-bar-val">Rs. 12,800</div>
+            </div>
+            <div class="exp-bar-row">
+              <div class="exp-bar-cat">☕ Kitchen</div>
+              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:28%"></div></div>
+              <div class="exp-bar-val">Rs. 7,600</div>
+            </div>
+            <div class="exp-bar-row">
+              <div class="exp-bar-cat">🧴 Toiletries</div>
+              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:13%"></div></div>
+              <div class="exp-bar-val">Rs. 3,900</div>
+            </div>
           </div>
         </div>
 
