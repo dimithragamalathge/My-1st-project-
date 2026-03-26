@@ -77,6 +77,7 @@
     flex-direction: column;
   }
 
+  /* Notch */
   .phone::before {
     content: '';
     position: absolute;
@@ -87,6 +88,8 @@
     border-radius: 0 0 20px 20px;
     z-index: 100;
   }
+
+  /* ─── SHARED COMPONENTS ─────────────────────── */
 
   .status-bar {
     height: 44px;
@@ -127,14 +130,36 @@
   .nav-item.active .nav-label { color: var(--navy); font-weight: 700; }
   .nav-icon { font-size: 20px; color: var(--muted); }
   .nav-label { font-size: 10px; color: var(--muted); font-weight: 500; letter-spacing: 0.03em; }
+  .nav-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    position: absolute;
+    top: 10px; right: 22px;
+  }
+
+  /* ─── SCREEN 1: DASHBOARD ─────────────────────── */
 
   .dash-header {
     background: var(--navy);
     padding: 20px 20px 28px;
   }
-  .dash-greeting { color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 2px; }
-  .dash-title { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
-  .dash-subtitle { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 4px; }
+  .dash-greeting {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  .dash-title {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .dash-subtitle {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    margin-top: 4px;
+  }
 
   .alert-banner {
     background: linear-gradient(135deg, #92400E, #B45309);
@@ -166,6 +191,11 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--muted);
+  }
+  .section-link {
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 600;
   }
 
   .category-grid {
@@ -205,9 +235,16 @@
     border-radius: 20px;
     margin-top: 8px;
   }
-  .cat-badge-ok { background: #DCFCE7; color: #166534; }
+  .cat-badge-ok {
+    background: #DCFCE7;
+    color: #166534;
+  }
 
-  .quick-stats { display: flex; gap: 10px; padding: 0 16px 20px; }
+  .quick-stats {
+    display: flex;
+    gap: 10px;
+    padding: 0 16px 20px;
+  }
   .stat-card {
     flex: 1;
     background: var(--white);
@@ -216,8 +253,75 @@
     text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   }
-  .stat-num { font-size: 24px; font-weight: 800; color: var(--navy); line-height: 1; }
+  .stat-num {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1;
+  }
   .stat-label { font-size: 10px; color: var(--muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ─── EXPENSE SNAPSHOT (dashboard) ─── */
+  .exp-snapshot {
+    margin: 0 16px 4px;
+    background: var(--navy);
+    border-radius: 20px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(27,42,74,0.2);
+  }
+  .exp-snapshot::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: rgba(200,144,42,0.12);
+    border-radius: 50%;
+  }
+  .exp-snapshot::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 30px;
+    width: 90px; height: 90px;
+    background: rgba(200,144,42,0.07);
+    border-radius: 50%;
+  }
+  .exp-snap-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  .exp-snap-label { color: rgba(255,255,255,0.55); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .exp-snap-amount { color: #fff; font-size: 26px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+  .exp-snap-sub { color: rgba(255,255,255,0.45); font-size: 11px; margin-top: 3px; }
+  .exp-snap-link {
+    background: rgba(200,144,42,0.2);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+  }
+  .exp-snap-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    position: relative;
+    z-index: 1;
+  }
+  .exp-bar-row { display: flex; align-items: center; gap: 8px; }
+  .exp-bar-cat { color: rgba(255,255,255,0.65); font-size: 11px; width: 76px; flex-shrink: 0; }
+  .exp-bar-track { flex: 1; height: 5px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+  .exp-bar-fill { height: 100%; border-radius: 10px; background: var(--gold); }
+  .exp-bar-val { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; width: 70px; text-align: right; flex-shrink: 0; }
+
+  /* ─── SCREEN 2: INVENTORY DETAIL ─────────────────── */
 
   .detail-header {
     background: var(--navy);
@@ -235,10 +339,12 @@
     flex-shrink: 0;
   }
   .detail-header-text { flex: 1; }
+  .detail-emoji { font-size: 28px; }
   .detail-title { color: white; font-size: 18px; font-weight: 700; margin-bottom: 2px; }
   .detail-sub { color: rgba(255,255,255,0.55); font-size: 12px; }
 
   .item-list { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+
   .item-row {
     background: var(--white);
     border-radius: 16px;
@@ -258,94 +364,153 @@
     background: var(--amber);
   }
   .item-row.critical::before { background: var(--red); }
+
   .item-icon { font-size: 22px; width: 36px; text-align: center; flex-shrink: 0; }
   .item-info { flex: 1; }
   .item-name { font-size: 14px; font-weight: 600; color: var(--text); }
   .item-unit { font-size: 11px; color: var(--muted); }
+
   .item-qty-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
   .item-qty { font-size: 20px; font-weight: 800; color: var(--navy); line-height: 1; }
   .item-qty.low-text { color: var(--amber); }
   .item-qty.critical-text { color: var(--red); }
-  .item-status { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+  .item-status {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
   .status-ok { background: #DCFCE7; color: #166534; }
   .status-low { background: #FEF3C7; color: #92400E; }
   .status-critical { background: #FEE2E2; color: #991B1B; }
 
   .fab {
     position: absolute;
-    bottom: 80px; right: 16px;
+    bottom: 80px;
+    right: 16px;
     width: 52px; height: 52px;
     background: var(--gold);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 24px; color: white;
+    font-size: 24px;
+    color: white;
     box-shadow: 0 4px 16px rgba(200,144,42,0.5);
     font-weight: 300;
   }
 
-  .exp-header { background: var(--navy); padding: 20px 20px 28px; }
+  /* ─── SCREEN 3: EXPENSE LOG ─────────────────────── */
+
+  .exp-header {
+    background: var(--navy);
+    padding: 20px 20px 28px;
+  }
   .exp-title { color: white; font-size: 22px; font-weight: 700; }
   .exp-sub { color: rgba(255,255,255,0.55); font-size: 12px; margin-top: 4px; }
 
   .exp-summary-cards {
-    display: flex; gap: 10px;
+    display: flex;
+    gap: 10px;
     margin: -14px 16px 0;
-    position: relative; z-index: 1;
+    position: relative;
+    z-index: 1;
   }
   .exp-sum-card {
-    flex: 1; background: white; border-radius: 16px; padding: 14px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1); text-align: center;
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    text-align: center;
   }
   .exp-sum-amount { font-size: 20px; font-weight: 800; color: var(--navy); }
   .exp-sum-label { font-size: 10px; color: var(--muted); margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 
-  .month-tabs { display: flex; gap: 8px; padding: 20px 16px 10px; overflow-x: auto; }
+  .month-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 20px 16px 10px;
+    overflow-x: auto;
+  }
   .month-tabs::-webkit-scrollbar { display: none; }
   .tab {
-    padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;
-    white-space: nowrap; flex-shrink: 0; background: var(--border); color: var(--muted);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+    background: var(--border);
+    color: var(--muted);
   }
   .tab.active { background: var(--navy); color: white; }
 
   .exp-list { padding: 0 16px 80px; display: flex; flex-direction: column; gap: 10px; }
   .exp-item {
-    background: white; border-radius: 16px; padding: 14px 16px;
-    display: flex; align-items: center; gap: 12px;
+    background: white;
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   }
   .exp-cat-dot {
-    width: 40px; height: 40px; border-radius: 12px;
+    width: 40px; height: 40px;
+    border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
+    font-size: 18px;
+    flex-shrink: 0;
   }
   .dot-clean { background: #EFF6FF; }
   .dot-kitchen { background: #FFF7ED; }
   .dot-linen { background: #F0FDF4; }
+  .dot-toilet { background: #FDF4FF; }
+  .dot-maint { background: #FFF1F2; }
+
   .exp-info { flex: 1; }
   .exp-name { font-size: 14px; font-weight: 600; color: var(--text); }
   .exp-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
   .exp-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
   .exp-amount { font-size: 16px; font-weight: 800; color: var(--text); }
   .receipt-chip {
-    display: flex; align-items: center; gap: 3px;
-    background: #EFF6FF; color: #1D4ED8;
-    font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
-    text-transform: uppercase; letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
+  /* ─── SCREEN 4: LOG EXPENSE FORM ─────────────────── */
+
   .form-header {
-    background: var(--navy); padding: 16px 20px 24px;
-    display: flex; align-items: center; gap: 12px;
+    background: var(--navy);
+    padding: 16px 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
   .form-title { color: white; font-size: 18px; font-weight: 700; }
+
   .form-body { padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; }
+
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
 
   .amount-input {
-    background: white; border-radius: 16px; padding: 16px;
-    display: flex; align-items: center; gap: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 2px solid var(--gold);
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 2px solid var(--gold);
   }
   .currency { font-size: 20px; font-weight: 700; color: var(--muted); }
   .amount-val { font-size: 28px; font-weight: 800; color: var(--text); flex: 1; }
@@ -353,37 +518,67 @@
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
   .select-field {
-    background: white; border-radius: 16px; padding: 14px 16px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1.5px solid var(--border);
+    background: white;
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1.5px solid var(--border);
   }
   .select-val { font-size: 15px; font-weight: 600; color: var(--text); }
   .select-arrow { color: var(--muted); font-size: 14px; }
 
   .text-field {
-    background: white; border-radius: 16px; padding: 14px 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1.5px solid var(--border);
-    font-size: 15px; color: var(--text); font-family: inherit; resize: none;
+    background: white;
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1.5px solid var(--border);
+    font-size: 15px;
+    color: var(--text);
+    font-family: inherit;
+    resize: none;
   }
 
   .receipt-upload {
-    background: white; border-radius: 16px; padding: 20px;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    border: 2px dashed var(--border); text-align: center;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border: 2px dashed var(--border);
+    text-align: center;
   }
   .receipt-icon { font-size: 32px; }
   .receipt-upload-text { font-size: 14px; font-weight: 600; color: var(--text); }
   .receipt-upload-sub { font-size: 12px; color: var(--muted); }
   .receipt-cta {
-    background: #EFF6FF; color: #1D4ED8; font-size: 12px; font-weight: 700;
-    padding: 8px 20px; border-radius: 20px; margin-top: 4px;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: 20px;
+    margin-top: 4px;
   }
 
   .submit-btn {
-    background: var(--navy); color: white; border-radius: 16px; padding: 18px;
-    text-align: center; font-size: 16px; font-weight: 700; letter-spacing: 0.02em;
-    margin: 0 16px 20px; box-shadow: 0 6px 20px rgba(27,42,74,0.35);
+    background: var(--navy);
+    color: white;
+    border-radius: 16px;
+    padding: 18px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin: 0 16px 20px;
+    box-shadow: 0 6px 20px rgba(27,42,74,0.35);
   }
+
 </style>
 </head>
 <body>
@@ -392,16 +587,25 @@
 
 <div class="phone-row">
 
+  <!-- ═══════════════════════════════════════
+       SCREEN 1: MAIN DASHBOARD
+  ═══════════════════════════════════════ -->
   <div class="phone-wrap">
     <div class="screen-label">1 — Main Dashboard</div>
     <div class="phone">
-      <div class="status-bar"><span>9:41</span><span>●●●  WiFi  🔋</span></div>
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>●●●  WiFi  🔋</span>
+      </div>
+
       <div class="screen-content">
         <div class="dash-header">
           <div class="dash-greeting">Good morning, Maria 👋</div>
           <div class="dash-title">Property Overview</div>
           <div class="dash-subtitle">Tuesday, 24 March 2026</div>
         </div>
+
+        <!-- Alert banner -->
         <div class="alert-banner">
           <div class="alert-icon">⚠️</div>
           <div class="alert-text">
@@ -410,32 +614,125 @@
           </div>
           <div class="alert-arrow">›</div>
         </div>
-        <div class="section-header" style="padding-top:24px;"><div class="section-title">At a Glance</div></div>
-        <div class="quick-stats">
-          <div class="stat-card"><div class="stat-num">24</div><div class="stat-label">Items Tracked</div></div>
-          <div class="stat-card"><div class="stat-num" style="color:var(--amber)">3</div><div class="stat-label">Need Restock</div></div>
-          <div class="stat-card"><div class="stat-num" style="color:#16A34A">21</div><div class="stat-label">All Good</div></div>
+
+        <!-- Stats row -->
+        <div class="section-header" style="padding-top:24px;">
+          <div class="section-title">At a Glance</div>
         </div>
-        <div class="section-header"><div class="section-title">Supply Categories</div></div>
+        <div class="quick-stats">
+          <div class="stat-card">
+            <div class="stat-num">24</div>
+            <div class="stat-label">Items Tracked</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="color:var(--amber)">3</div>
+            <div class="stat-label">Need Restock</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="color:var(--green)">21</div>
+            <div class="stat-label">All Good</div>
+          </div>
+        </div>
+
+        <!-- Expense snapshot -->
+        <div class="section-header">
+          <div class="section-title">Expenses — March 2026</div>
+          <div class="section-link">See All ›</div>
+        </div>
+        <div class="exp-snapshot">
+          <div class="exp-snap-top">
+            <div>
+              <div class="exp-snap-label">Total spent this month</div>
+              <div class="exp-snap-amount">Rs. 42,500</div>
+              <div class="exp-snap-sub">6 entries · by 2 team members</div>
+            </div>
+            <div class="exp-snap-link">View All ›</div>
+          </div>
+          <div class="exp-snap-bars">
+            <div class="exp-bar-row">
+              <div class="exp-bar-cat">🧹 Cleaning</div>
+              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:65%"></div></div>
+              <div class="exp-bar-val">Rs. 18,200</div>
+            </div>
+            <div class="exp-bar-row">
+              <div class="exp-bar-cat">🛏 Linens</div>
+              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:43%"></div></div>
+              <div class="exp-bar-val">Rs. 12,800</div>
+            </div>
+            <div class="exp-bar-row">
+              <div class="exp-bar-cat">☕ Kitchen</div>
+              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:28%"></div></div>
+              <div class="exp-bar-val">Rs. 7,600</div>
+            </div>
+            <div class="exp-bar-row">
+              <div class="exp-bar-cat">🧴 Toiletries</div>
+              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:13%"></div></div>
+              <div class="exp-bar-val">Rs. 3,900</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category cards -->
+        <div class="section-header">
+          <div class="section-title">Supply Categories</div>
+        </div>
         <div class="category-grid">
-          <div class="cat-card has-alert"><span class="cat-emoji">🧴</span><div class="cat-name">Toiletries & Bathroom</div><div class="cat-count">6 items total</div><div class="cat-badge">⚠ 2 items low</div></div>
-          <div class="cat-card"><span class="cat-emoji">🛏</span><div class="cat-name">Linens & Bedding</div><div class="cat-count">5 items total</div><div class="cat-badge cat-badge-ok">✓ All good</div></div>
-          <div class="cat-card has-alert"><span class="cat-emoji">🧹</span><div class="cat-name">Cleaning Products</div><div class="cat-count">7 items total</div><div class="cat-badge">⚠ 1 item low</div></div>
-          <div class="cat-card"><span class="cat-emoji">☕</span><div class="cat-name">Kitchen & Pantry</div><div class="cat-count">6 items total</div><div class="cat-badge cat-badge-ok">✓ All good</div></div>
+          <div class="cat-card has-alert">
+            <span class="cat-emoji">🧴</span>
+            <div class="cat-name">Toiletries & Bathroom</div>
+            <div class="cat-count">6 items total</div>
+            <div class="cat-badge">⚠ 2 items low</div>
+          </div>
+          <div class="cat-card">
+            <span class="cat-emoji">🛏</span>
+            <div class="cat-name">Linens & Bedding</div>
+            <div class="cat-count">5 items total</div>
+            <div class="cat-badge cat-badge-ok">✓ All good</div>
+          </div>
+          <div class="cat-card has-alert">
+            <span class="cat-emoji">🧹</span>
+            <div class="cat-name">Cleaning Products</div>
+            <div class="cat-count">7 items total</div>
+            <div class="cat-badge">⚠ 1 item low</div>
+          </div>
+          <div class="cat-card">
+            <span class="cat-emoji">☕</span>
+            <div class="cat-name">Kitchen & Pantry</div>
+            <div class="cat-count">6 items total</div>
+            <div class="cat-badge cat-badge-ok">✓ All good</div>
+          </div>
         </div>
       </div>
+
       <div class="bottom-nav">
-        <div class="nav-item active"><div class="nav-icon">📊</div><div class="nav-label">Dashboard</div></div>
-        <div class="nav-item"><div class="nav-icon">📦</div><div class="nav-label">Inventory</div></div>
-        <div class="nav-item"><div class="nav-icon">🧾</div><div class="nav-label">Expenses</div></div>
+        <div class="nav-item active">
+          <div class="nav-icon">📊</div>
+          <div class="nav-label">Dashboard</div>
+        </div>
+        <div class="nav-item" style="position:relative">
+          <div class="nav-icon">📦</div>
+          <div class="nav-label">Inventory</div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon">🧾</div>
+          <div class="nav-label">Expenses</div>
+        </div>
       </div>
     </div>
   </div>
 
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 2: INVENTORY DETAIL
+  ═══════════════════════════════════════ -->
   <div class="phone-wrap">
     <div class="screen-label">2 — Inventory Detail (Toiletries)</div>
     <div class="phone">
-      <div class="status-bar"><span>9:41</span><span>●●●  WiFi  🔋</span></div>
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>●●●  WiFi  🔋</span>
+      </div>
+
       <div class="screen-content">
         <div class="detail-header">
           <div class="back-btn">‹</div>
@@ -444,76 +741,251 @@
             <div class="detail-sub">6 items · 2 need restocking · Tap any item to update</div>
           </div>
         </div>
+
         <div class="item-list">
-          <div class="item-row critical"><div class="item-icon">🧻</div><div class="item-info"><div class="item-name">Toilet Paper</div><div class="item-unit">rolls · min. 8</div></div><div class="item-qty-wrap"><div class="item-qty critical-text">3</div><div class="item-status status-critical">Critical</div></div></div>
-          <div class="item-row low"><div class="item-icon">🧴</div><div class="item-info"><div class="item-name">Shampoo</div><div class="item-unit">bottles · min. 4</div></div><div class="item-qty-wrap"><div class="item-qty low-text">2</div><div class="item-status status-low">Low</div></div></div>
-          <div class="item-row"><div class="item-icon">🪥</div><div class="item-info"><div class="item-name">Body Wash</div><div class="item-unit">bottles · min. 4</div></div><div class="item-qty-wrap"><div class="item-qty">8</div><div class="item-status status-ok">Good</div></div></div>
-          <div class="item-row"><div class="item-icon">🫧</div><div class="item-info"><div class="item-name">Hand Soap</div><div class="item-unit">pumps · min. 4</div></div><div class="item-qty-wrap"><div class="item-qty">6</div><div class="item-status status-ok">Good</div></div></div>
-          <div class="item-row"><div class="item-icon">🧼</div><div class="item-info"><div class="item-name">Bar Soap (Guest)</div><div class="item-unit">bars · min. 8</div></div><div class="item-qty-wrap"><div class="item-qty">12</div><div class="item-status status-ok">Good</div></div></div>
-          <div class="item-row"><div class="item-icon">🪒</div><div class="item-info"><div class="item-name">Disposable Razors</div><div class="item-unit">units · min. 6</div></div><div class="item-qty-wrap"><div class="item-qty">9</div><div class="item-status status-ok">Good</div></div></div>
+          <div class="item-row critical">
+            <div class="item-icon">🧻</div>
+            <div class="item-info">
+              <div class="item-name">Toilet Paper</div>
+              <div class="item-unit">rolls · min. 8</div>
+            </div>
+            <div class="item-qty-wrap">
+              <div class="item-qty critical-text">3</div>
+              <div class="item-status status-critical">Critical</div>
+            </div>
+          </div>
+
+          <div class="item-row low">
+            <div class="item-icon">🧴</div>
+            <div class="item-info">
+              <div class="item-name">Shampoo</div>
+              <div class="item-unit">bottles · min. 4</div>
+            </div>
+            <div class="item-qty-wrap">
+              <div class="item-qty low-text">2</div>
+              <div class="item-status status-low">Low</div>
+            </div>
+          </div>
+
+          <div class="item-row">
+            <div class="item-icon">🪥</div>
+            <div class="item-info">
+              <div class="item-name">Body Wash</div>
+              <div class="item-unit">bottles · min. 4</div>
+            </div>
+            <div class="item-qty-wrap">
+              <div class="item-qty">8</div>
+              <div class="item-status status-ok">Good</div>
+            </div>
+          </div>
+
+          <div class="item-row">
+            <div class="item-icon">🫧</div>
+            <div class="item-info">
+              <div class="item-name">Hand Soap</div>
+              <div class="item-unit">pumps · min. 4</div>
+            </div>
+            <div class="item-qty-wrap">
+              <div class="item-qty">6</div>
+              <div class="item-status status-ok">Good</div>
+            </div>
+          </div>
+
+          <div class="item-row">
+            <div class="item-icon">🧼</div>
+            <div class="item-info">
+              <div class="item-name">Bar Soap (Guest)</div>
+              <div class="item-unit">bars · min. 8</div>
+            </div>
+            <div class="item-qty-wrap">
+              <div class="item-qty">12</div>
+              <div class="item-status status-ok">Good</div>
+            </div>
+          </div>
+
+          <div class="item-row">
+            <div class="item-icon">🪒</div>
+            <div class="item-info">
+              <div class="item-name">Disposable Razors</div>
+              <div class="item-unit">units · min. 6</div>
+            </div>
+            <div class="item-qty-wrap">
+              <div class="item-qty">9</div>
+              <div class="item-status status-ok">Good</div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- FAB -->
       <div class="fab">+</div>
+
       <div class="bottom-nav">
-        <div class="nav-item"><div class="nav-icon">📊</div><div class="nav-label">Dashboard</div></div>
-        <div class="nav-item active"><div class="nav-icon">📦</div><div class="nav-label">Inventory</div></div>
-        <div class="nav-item"><div class="nav-icon">🧾</div><div class="nav-label">Expenses</div></div>
+        <div class="nav-item">
+          <div class="nav-icon">📊</div>
+          <div class="nav-label">Dashboard</div>
+        </div>
+        <div class="nav-item active">
+          <div class="nav-icon">📦</div>
+          <div class="nav-label">Inventory</div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon">🧾</div>
+          <div class="nav-label">Expenses</div>
+        </div>
       </div>
     </div>
   </div>
 
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 3: EXPENSE LOG
+  ═══════════════════════════════════════ -->
   <div class="phone-wrap">
     <div class="screen-label">3 — Expense Log</div>
     <div class="phone">
-      <div class="status-bar"><span>9:41</span><span>●●●  WiFi  🔋</span></div>
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>●●●  WiFi  🔋</span>
+      </div>
+
       <div class="screen-content">
-        <div class="exp-header"><div class="exp-title">Expenses</div><div class="exp-sub">Track spending · View summaries</div></div>
+        <div class="exp-header">
+          <div class="exp-title">Expenses</div>
+          <div class="exp-sub">Track spending · View summaries</div>
+        </div>
+
+        <!-- Summary cards -->
         <div class="exp-summary-cards">
-          <div class="exp-sum-card"><div class="exp-sum-amount">$847</div><div class="exp-sum-label">March Total</div></div>
-          <div class="exp-sum-card"><div class="exp-sum-amount" style="color:#C8902A">$312</div><div class="exp-sum-label">Cleaning</div></div>
-          <div class="exp-sum-card"><div class="exp-sum-amount">3</div><div class="exp-sum-label">Entries</div></div>
+          <div class="exp-sum-card">
+            <div class="exp-sum-amount">$847</div>
+            <div class="exp-sum-label">March Total</div>
+          </div>
+          <div class="exp-sum-card">
+            <div class="exp-sum-amount" style="color:var(--gold)">$312</div>
+            <div class="exp-sum-label">Cleaning</div>
+          </div>
+          <div class="exp-sum-card">
+            <div class="exp-sum-amount" style="color:var(--navy)">3</div>
+            <div class="exp-sum-label">Entries</div>
+          </div>
         </div>
+
+        <!-- Month tabs -->
         <div class="month-tabs">
-          <div class="tab">Jan</div><div class="tab">Feb</div><div class="tab active">Mar</div><div class="tab">Apr</div>
+          <div class="tab">Jan</div>
+          <div class="tab">Feb</div>
+          <div class="tab active">Mar</div>
+          <div class="tab">Apr</div>
         </div>
-        <div class="section-header" style="padding-top:4px"><div class="section-title">Recent Expenses</div></div>
+
+        <div class="section-header" style="padding-top:4px">
+          <div class="section-title">Recent Expenses</div>
+        </div>
+
         <div class="exp-list">
-          <div class="exp-item"><div class="exp-cat-dot dot-clean">🧹</div><div class="exp-info"><div class="exp-name">Cleaning Supplies Run</div><div class="exp-meta">Maria · Mar 22 · Cleaning</div></div><div class="exp-right"><div class="exp-amount">$312</div><div class="receipt-chip">📷 Receipt</div></div></div>
-          <div class="exp-item"><div class="exp-cat-dot dot-kitchen">☕</div><div class="exp-info"><div class="exp-name">Coffee & Tea Restock</div><div class="exp-meta">James · Mar 18 · Kitchen</div></div><div class="exp-right"><div class="exp-amount">$89</div><div class="receipt-chip">📷 Receipt</div></div></div>
-          <div class="exp-item"><div class="exp-cat-dot dot-linen">🛏</div><div class="exp-info"><div class="exp-name">Replacement Pillows ×4</div><div class="exp-meta">Maria · Mar 10 · Linens</div></div><div class="exp-right"><div class="exp-amount">$446</div><div class="receipt-chip">📷 Receipt</div></div></div>
+          <div class="exp-item">
+            <div class="exp-cat-dot dot-clean">🧹</div>
+            <div class="exp-info">
+              <div class="exp-name">Cleaning Supplies Run</div>
+              <div class="exp-meta">Maria · Mar 22 · Cleaning</div>
+            </div>
+            <div class="exp-right">
+              <div class="exp-amount">$312</div>
+              <div class="receipt-chip">📷 Receipt</div>
+            </div>
+          </div>
+
+          <div class="exp-item">
+            <div class="exp-cat-dot dot-kitchen">☕</div>
+            <div class="exp-info">
+              <div class="exp-name">Coffee & Tea Restock</div>
+              <div class="exp-meta">James · Mar 18 · Kitchen</div>
+            </div>
+            <div class="exp-right">
+              <div class="exp-amount">$89</div>
+              <div class="receipt-chip">📷 Receipt</div>
+            </div>
+          </div>
+
+          <div class="exp-item">
+            <div class="exp-cat-dot dot-linen">🛏</div>
+            <div class="exp-info">
+              <div class="exp-name">Replacement Pillows ×4</div>
+              <div class="exp-meta">Maria · Mar 10 · Linens</div>
+            </div>
+            <div class="exp-right">
+              <div class="exp-amount">$446</div>
+              <div class="receipt-chip">📷 Receipt</div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- FAB -->
       <div class="fab">+</div>
+
       <div class="bottom-nav">
-        <div class="nav-item"><div class="nav-icon">📊</div><div class="nav-label">Dashboard</div></div>
-        <div class="nav-item"><div class="nav-icon">📦</div><div class="nav-label">Inventory</div></div>
-        <div class="nav-item active"><div class="nav-icon">🧾</div><div class="nav-label">Expenses</div></div>
+        <div class="nav-item">
+          <div class="nav-icon">📊</div>
+          <div class="nav-label">Dashboard</div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon">📦</div>
+          <div class="nav-label">Inventory</div>
+        </div>
+        <div class="nav-item active">
+          <div class="nav-icon">🧾</div>
+          <div class="nav-label">Expenses</div>
+        </div>
       </div>
     </div>
   </div>
 
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 4: LOG EXPENSE FORM
+  ═══════════════════════════════════════ -->
   <div class="phone-wrap">
     <div class="screen-label">4 — Log an Expense</div>
     <div class="phone">
-      <div class="status-bar"><span>9:41</span><span>●●●  WiFi  🔋</span></div>
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>●●●  WiFi  🔋</span>
+      </div>
+
       <div class="screen-content">
         <div class="form-header">
           <div class="back-btn">‹</div>
-          <div><div class="form-title">Log an Expense</div><div style="color:rgba(255,255,255,0.55);font-size:12px;margin-top:2px">Fill in the details · Snap the receipt</div></div>
+          <div>
+            <div class="form-title">Log an Expense</div>
+            <div style="color:rgba(255,255,255,0.55);font-size:12px;margin-top:2px">Fill in the details · Snap the receipt</div>
+          </div>
         </div>
+
         <div class="form-body">
           <div class="form-group">
             <div class="form-label">Amount Spent</div>
-            <div class="amount-input"><div class="currency">$</div><div class="amount-val">47.50</div><div class="cursor"></div></div>
+            <div class="amount-input">
+              <div class="currency">$</div>
+              <div class="amount-val">47.50</div>
+              <div class="cursor"></div>
+            </div>
           </div>
+
           <div class="form-group">
             <div class="form-label">Category</div>
-            <div class="select-field"><span class="select-val">🧹 Cleaning Products</span><span class="select-arrow">›</span></div>
+            <div class="select-field">
+              <span class="select-val">🧹 Cleaning Products</span>
+              <span class="select-arrow">›</span>
+            </div>
           </div>
+
           <div class="form-group">
             <div class="form-label">What was it for?</div>
             <div class="text-field" style="min-height:60px">Dishwasher tablets and floor cleaner from Walmart</div>
           </div>
+
           <div class="form-group">
             <div class="form-label">Receipt Photo</div>
             <div class="receipt-upload">
@@ -524,11 +996,13 @@
             </div>
           </div>
         </div>
+
         <div class="submit-btn">Save Expense →</div>
       </div>
     </div>
   </div>
 
-</div>
+</div><!-- end phone-row -->
+
 </body>
 </html>
