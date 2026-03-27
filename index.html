@@ -709,8 +709,8 @@
 
       <!-- Stats row -->
       <div class="dash-stats" style="grid-template-columns:1fr">
-        <div class="dash-stat-card">
-          <div class="dash-stat-label">Low Stock</div>
+        <div class="dash-stat-card" onclick="document.getElementById('dash-alert').scrollIntoView({behavior:'smooth'})" style="cursor:pointer">
+          <div class="dash-stat-label">Low Stock ›</div>
           <div class="dash-stat-value warn" id="dash-low-count">—</div>
           <div class="dash-stat-sub">items need restocking</div>
         </div>
