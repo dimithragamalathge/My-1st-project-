@@ -477,43 +477,53 @@ window.doSignup = async function() {
   const password = $('signup-password').value;
   clearError('signup-error');
 
-  if (!name)              { showError('signup-error', 'Please enter your name.');           return; }
-  if (!email)             { showError('signup-error', 'Please enter your email.');          return; }
-  if (password.length < 6){ showError('signup-error', 'Password must be at least 6 characters.'); return; }
+  if (!name)               { showError('signup-error', 'Please enter your name.');                    return; }
+  if (!email)              { showError('signup-error', 'Please enter your email.');                   return; }
+  if (password.length < 6) { showError('signup-error', 'Password must be at least 6 characters.');  return; }
 
   loading.show();
-
   const { data, error } = await db.auth.signUp({ email, password });
+  loading.hide();
 
   if (error) {
-    loading.hide();
     showError('signup-error', error.message || 'Could not create account. Please try again.');
     return;
   }
 
-  // If no session yet (email confirmation required), store name and prompt
+  // Save name so we can create the profile once they are fully signed in
+  localStorage.setItem('dc_pending_name', name);
+
   if (!data.session) {
-    loading.hide();
-    showError('signup-error', 'Almost there! Please check your email and click the confirmation link, then sign in.');
+    // Email confirmation is on — ask them to check their inbox
+    showError('signup-error', 'Check your email for a confirmation link, then come back and sign in.');
     return;
   }
 
-  // Create profile record (session is active, RLS will pass)
-  const { error: profileErr } = await db.from('profiles').insert({
-    id:   data.user.id,
-    name: name,
-    role: 'team'
-  });
-
-  loading.hide();
-
-  if (profileErr) {
-    // Profile may already exist — not a blocker
-    console.warn('Profile insert:', profileErr.message);
-  }
-
+  // Session is live — profile creation handled by onAuthStateChange
   showToast('Account created! Signing you in…', 'success');
 };
+
+// ── Ensure profile exists (called on every sign-in) ───────────────────────
+async function ensureProfile(user) {
+  const { data: existing } = await db
+    .from('profiles').select('id, name, role').eq('id', user.id).single();
+
+  if (existing) return existing;
+
+  // No profile yet — create one now
+  const pendingName = localStorage.getItem('dc_pending_name') || user.email.split('@')[0];
+  localStorage.removeItem('dc_pending_name');
+
+  // First account ever → owner; everyone after → team
+  const { count } = await db.from('profiles').select('id', { count: 'exact', head: true });
+  const role = (count === 0) ? 'owner' : 'team';
+
+  const { data: created } = await db.from('profiles').insert({
+    id: user.id, name: pendingName, role
+  }).select().single();
+
+  return created;
+}
 
 // ── Sign Out ─────────────────────────────────────────────────────────────
 window.doSignout = async function() {
@@ -523,8 +533,7 @@ window.doSignout = async function() {
 // ── Auth State ────────────────────────────────────────────────────────────
 db.auth.onAuthStateChange(async (event, session) => {
   if (session?.user) {
-    const { data: profile } = await db
-      .from('profiles').select('name').eq('id', session.user.id).single();
+    const profile = await ensureProfile(session.user);
     $('home-name').textContent = profile?.name?.split(' ')[0] || 'there';
     switchTo('screen-home');
   } else {
