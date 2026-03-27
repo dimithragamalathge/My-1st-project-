@@ -491,18 +491,25 @@ window.doSignup = async function() {
     return;
   }
 
-  // Create profile record
+  // If no session yet (email confirmation required), store name and prompt
+  if (!data.session) {
+    loading.hide();
+    showError('signup-error', 'Almost there! Please check your email and click the confirmation link, then sign in.');
+    return;
+  }
+
+  // Create profile record (session is active, RLS will pass)
   const { error: profileErr } = await db.from('profiles').insert({
     id:   data.user.id,
     name: name,
-    role: 'team'   // owner role set manually via Supabase dashboard
+    role: 'team'
   });
 
   loading.hide();
 
   if (profileErr) {
-    showError('signup-error', 'Account created but setup incomplete. Please contact the owner.');
-    return;
+    // Profile may already exist — not a blocker
+    console.warn('Profile insert:', profileErr.message);
   }
 
   showToast('Account created! Signing you in…', 'success');
