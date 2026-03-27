@@ -585,7 +585,8 @@
 const { createClient } = window.supabase;
 const db = createClient(
   'https://zcclpkmgsltjzgpuhrep.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjY2xwa21nc2x0anpncHVocmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzkyMDYsImV4cCI6MjA5MDExNTIwNn0.pSkoa1_jKdSWh8O83a5F8bbTme4v9QWjHWnTbpDqY_o'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjY2xwa21nc2x0anpncHVocmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzkyMDYsImV4cCI6MjA5MDExNTIwNn0.pSkoa1_jKdSWh8O83a5F8bbTme4v9QWjHWnTbpDqY_o',
+  { auth: { persistSession: false, autoRefreshToken: false } }
 );
 
 // ── Helpers ─────────────────────────────────────────────────────────────
@@ -625,13 +626,23 @@ window.doLogin = async function() {
   }
 
   loading.show();
-  const { error } = await db.auth.signInWithPassword({ email, password });
-  loading.hide();
-
+  const { data, error } = await db.auth.signInWithPassword({ email, password });
   if (error) {
+    loading.hide();
     showError('login-error', 'Incorrect email or password. Please try again.');
+    return;
   }
-  // success → handled by onAuthStateChange below
+
+  try {
+    const profile = await ensureProfile(data.user);
+    if (!profile) throw new Error('No profile');
+    await loadDashboard(profile);
+    loading.hide();
+    switchTo('screen-home');
+  } catch (err) {
+    loading.hide();
+    showError('login-error', 'Signed in but could not load your data. Please try again.');
+  }
 };
 
 // ── Sign Up ──────────────────────────────────────────────────────────────
@@ -701,6 +712,7 @@ async function ensureProfile(user) {
 // ── Sign Out ─────────────────────────────────────────────────────────────
 window.doSignout = async function() {
   await db.auth.signOut();
+  switchTo('screen-login');
 };
 
 // ── Dashboard ─────────────────────────────────────────────────────────────
@@ -765,45 +777,8 @@ function fmtDate(d) {
 window.goToInventory = function() { showToast('Inventory coming in the next step!'); };
 window.goToExpenses  = function() { showToast('Expenses coming soon!'); };
 
-// ── Force sign out (escape hatch) ────────────────────────────────────────
-window.forceSignOut = async function() {
-  clearTimeout(window._escapeTimer);
-  $('loading').classList.add('hidden');
-  await db.auth.signOut();
-};
-
-// ── Auth State ────────────────────────────────────────────────────────────
-db.auth.onAuthStateChange(async (event, session) => {
-  clearTimeout(window._escapeTimer);
-  $('loading-escape').style.display = 'none';
-
-  if (session?.user) {
-    loading.show();
-
-    // Show escape button after 5 seconds if still loading
-    window._escapeTimer = setTimeout(() => {
-      $('loading-escape').style.display = 'block';
-    }, 5000);
-
-    try {
-      const profile = await ensureProfile(session.user);
-      if (!profile) throw new Error('Profile could not be loaded.');
-      await loadDashboard(profile);
-      clearTimeout(window._escapeTimer);
-      loading.hide();
-      switchTo('screen-home');
-    } catch (err) {
-      console.error('Login error:', err);
-      clearTimeout(window._escapeTimer);
-      loading.hide();
-      await db.auth.signOut();
-      showToast('Something went wrong loading your data. Please sign in again.', 'error');
-    }
-  } else {
-    loading.hide();
-    switchTo('screen-login');
-  }
-});
+// ── Always start on the login screen ─────────────────────────────────────
+switchTo('screen-login');
 </script>
 </body>
 </html>
