@@ -1413,7 +1413,7 @@ async function loadExpenses() {
   expensesData = data || [];
   updateExpenseStats();
   renderExpenses(expensesData);
-  $('exp-csv-wrap').style.display = expensesData.length > 0 ? 'block' : 'none';
+  $('exp-csv-wrap').style.display = (expensesData.length > 0 && currentProfile?.role === 'owner') ? 'block' : 'none';
 }
 
 function updateExpenseStats() {
