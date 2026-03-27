@@ -257,6 +257,63 @@
     }
 
     /* ══════════════════════════════════════
+       SHARED FORM ELEMENTS
+    ══════════════════════════════════════ */
+    .form-header {
+      background: var(--navy);
+      padding: 16px 20px 18px;
+      display: flex; align-items: center; gap: 12px;
+      flex-shrink: 0; position: sticky; top: 0; z-index: 10;
+    }
+    .form-header-text { flex: 1; }
+    .form-header-title { color: white; font-size: 17px; font-weight: 700; }
+    .form-header-sub   { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 2px; }
+
+    .form-body  { padding: 20px 16px 48px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; }
+    .form-field { display: flex; flex-direction: column; gap: 8px; }
+    .form-label { font-size: 13px; font-weight: 600; color: var(--text); }
+
+    .form-textarea {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid var(--border); border-radius: 11px;
+      font-size: 14px; color: var(--text); background: white;
+      resize: none; height: 90px; font-family: inherit;
+    }
+    .form-textarea:focus { outline: none; border-color: var(--gold); }
+
+    .chips-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 8px 16px; border-radius: 20px;
+      border: 1.5px solid var(--border); background: white;
+      font-size: 13px; font-weight: 600; color: var(--text);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .chip.active { background: var(--navy); border-color: var(--navy); color: white; }
+
+    .btn-submit {
+      width: 100%; padding: 16px;
+      background: var(--gold); color: white; border: none;
+      border-radius: 14px; font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: opacity 0.15s; margin-top: 4px;
+    }
+    .btn-submit:active { opacity: 0.82; }
+
+    .breakage-btn {
+      padding: 6px 10px; border-radius: 8px; flex-shrink: 0;
+      background: #FEE2E2; color: #991B1B;
+      border: 1px solid #FECACA; font-size: 11px; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
+    }
+
+    /* Breakage item card */
+    .breakage-item-card {
+      background: #FEE2E2; border-radius: 13px; padding: 14px 16px;
+      border: 1px solid #FECACA;
+    }
+    .breakage-item-name { font-size: 15px; font-weight: 700; color: #991B1B; }
+    .breakage-item-cat  { font-size: 12px; color: #EF4444; margin-top: 3px; }
+
+    /* ══════════════════════════════════════
        LOGIN SCREEN
     ══════════════════════════════════════ */
     .login-bg {
@@ -681,6 +738,50 @@
 
   </div>
 
+  <!-- ══════════════ LOG BREAKAGE ══════════════ -->
+  <div id="screen-breakage" class="screen">
+
+    <div class="form-header" style="background:#991B1B">
+      <button class="back-btn" onclick="switchTo('screen-inventory')">‹</button>
+      <div class="form-header-text">
+        <div class="form-header-title">Log a Breakage</div>
+        <div class="form-header-sub">Record what broke and who reported it</div>
+      </div>
+      <div class="dc-logo-sm">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
+          <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
+          <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
+          <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="form-body">
+
+      <div class="breakage-item-card" id="breakage-item-card">
+        <div class="breakage-item-name" id="breakage-item-name">—</div>
+        <div class="breakage-item-cat"  id="breakage-item-cat">—</div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">What happened?</label>
+        <textarea id="breakage-desc" class="form-textarea"
+                  placeholder="Describe what broke or was damaged…"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Reported by</label>
+        <div class="chips-row" id="breakage-reporter"></div>
+      </div>
+
+      <button class="btn-submit" style="background:#991B1B" onclick="submitBreakage()">
+        Submit Report
+      </button>
+
+    </div>
+  </div>
+
   <!-- Overlays -->
   <div id="loading" class="loading-overlay hidden">
     <div style="text-align:center">
@@ -942,23 +1043,28 @@ function renderInventory() {
 }
 
 function renderItem(item, canEdit) {
-  const isLow = item.quantity <= item.min_threshold;
+  const isLow      = item.quantity <= item.min_threshold;
+  const isProperty = item.item_type === 'property';
+
+  const rightSide = canEdit
+    ? `<div class="stepper">
+         <button class="stepper-btn" onclick="adjustQty('${item.id}', -1)">−</button>
+         <span class="stepper-val" id="qty-${item.id}">${item.quantity}</span>
+         <button class="stepper-btn" onclick="adjustQty('${item.id}', +1)">+</button>
+       </div>`
+    : `<div style="display:flex;align-items:center;gap:8px">
+         <span class="stepper-val">${item.quantity} <small style="font-size:11px;font-weight:400;color:var(--muted)">${item.unit}</small></span>
+         ${isProperty ? `<button class="breakage-btn" onclick="openBreakage('${item.id}')">⚠ Report</button>` : ''}
+       </div>`;
+
   return `
     <div class="inv-item ${isLow ? 'low' : ''}" id="inv-row-${item.id}">
       <div class="inv-item-info">
         <div class="inv-item-name">${item.name}</div>
-        <div class="inv-item-meta">Min: ${item.min_threshold} ${item.unit}</div>
+        <div class="inv-item-meta">${item.quantity} ${item.unit} · Min: ${item.min_threshold}</div>
         ${isLow ? '<div class="inv-low-badge">⚠ Low Stock</div>' : ''}
       </div>
-      ${canEdit ? `
-        <div class="stepper">
-          <button class="stepper-btn" onclick="adjustQty('${item.id}', -1)">−</button>
-          <span class="stepper-val" id="qty-${item.id}">${item.quantity}</span>
-          <button class="stepper-btn" onclick="adjustQty('${item.id}', +1)">+</button>
-        </div>
-      ` : `
-        <span class="stepper-val">${item.quantity} <small style="font-size:11px;font-weight:400;color:var(--muted)">${item.unit}</small></span>
-      `}
+      ${rightSide}
     </div>`;
 }
 
@@ -990,6 +1096,58 @@ window.adjustQty = async function(id, delta) {
     $(`qty-${id}`).textContent = item.quantity;
     showToast('Could not save. Check your connection.', 'error');
   }
+};
+
+// ── Breakage form ──────────────────────────────────────────────────────────
+let breakageItem    = null;
+let breakageReporter = null;
+let allProfiles     = [];
+
+async function loadProfiles() {
+  if (allProfiles.length > 0) return;
+  const { data } = await db.from('profiles').select('id, name');
+  allProfiles = data || [];
+}
+
+window.openBreakage = async function(itemId) {
+  breakageItem = inventoryData.find(i => i.id === itemId);
+  if (!breakageItem) return;
+
+  $('breakage-item-name').textContent = breakageItem.name;
+  $('breakage-item-cat').textContent  = breakageItem.category;
+  $('breakage-desc').value = '';
+
+  await loadProfiles();
+  breakageReporter = currentProfile?.id || null;
+  $('breakage-reporter').innerHTML = allProfiles.map(p => `
+    <div class="chip ${p.id === breakageReporter ? 'active' : ''}"
+         onclick="selectReporter('${p.id}', this)">${p.name}</div>
+  `).join('');
+
+  switchTo('screen-breakage');
+};
+
+window.selectReporter = function(id, el) {
+  breakageReporter = id;
+  $('breakage-reporter').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+};
+
+window.submitBreakage = async function() {
+  const desc = $('breakage-desc').value.trim();
+  if (!desc) { showToast('Please describe what happened.', 'error'); return; }
+
+  loading.show();
+  const { error } = await db.from('breakages').insert({
+    item_name:   breakageItem.name,
+    description: desc,
+    reported_by: breakageReporter || currentProfile?.id
+  });
+  loading.hide();
+
+  if (error) { showToast('Could not save. Please try again.', 'error'); return; }
+  showToast('Breakage report saved.', 'success');
+  switchTo('screen-inventory');
 };
 
 window.goToExpenses = function() { showToast('Expenses coming soon!'); };
