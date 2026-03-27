@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dover Cottage</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
     :root {
       --navy:   #3B2314;
@@ -579,10 +580,9 @@
 
 </div>
 
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-
+<script>
 // ── Supabase ────────────────────────────────────────────────────────────
+const { createClient } = window.supabase;
 const db = createClient(
   'https://zcclpkmgsltjzgpuhrep.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjY2xwa21nc2x0anpncHVocmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzkyMDYsImV4cCI6MjA5MDExNTIwNn0.pSkoa1_jKdSWh8O83a5F8bbTme4v9QWjHWnTbpDqY_o'
