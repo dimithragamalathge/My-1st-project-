@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dover Cottage</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
     :root {
       --navy:   #3B2314;
@@ -86,6 +87,231 @@
     .toast.hidden  { opacity: 0; }
     .toast.error   { background: #B91C1C; }
     .toast.success { background: var(--green); }
+
+    /* ══════════════════════════════════════
+       DASHBOARD
+    ══════════════════════════════════════ */
+    .dash-header {
+      background: var(--navy);
+      padding: 20px 20px 24px;
+      flex-shrink: 0;
+    }
+    .dash-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .dash-brand { display: flex; align-items: center; gap: 11px; }
+    .dash-logo  { width: 42px; height: 42px; color: var(--gold); flex-shrink: 0; }
+    .dash-logo svg { width: 100%; height: 100%; }
+    .dash-brand-name { color: white; font-size: 14px; font-weight: 700; letter-spacing: 1.5px; }
+    .dash-brand-loc  { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 1px; }
+    .dash-signout-btn {
+      background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+      border: none; border-radius: 9px; padding: 7px 12px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+
+    .dash-greeting { margin-bottom: 16px; }
+    .dash-greeting-text { color: white; font-size: 22px; font-weight: 700; }
+    .dash-date { color: rgba(255,255,255,0.45); font-size: 13px; margin-top: 2px; }
+
+    .dash-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;
+    }
+    .dash-stat-card {
+      background: rgba(255,255,255,0.1); border-radius: 14px; padding: 14px;
+    }
+    .dash-stat-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
+    .dash-stat-value { font-size: 28px; font-weight: 700; color: white; margin: 4px 0 2px; }
+    .dash-stat-value.warn { color: #FCD34D; }
+    .dash-stat-sub   { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+    .dash-spend-bar {
+      background: rgba(255,255,255,0.1); border-radius: 14px; padding: 14px;
+    }
+    .dash-spend-label  { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .dash-spend-amount { font-size: 26px; font-weight: 700; color: white; }
+    .dash-spend-sub    { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 3px; }
+
+    .dash-body { padding: 16px 16px 40px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+
+    .dash-alert {
+      background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 14px; padding: 14px;
+    }
+    .dash-alert-title { font-size: 13px; font-weight: 700; color: #92400E; margin-bottom: 8px; }
+    .dash-alert-item  { font-size: 13px; color: #78350F; padding: 2px 0; }
+
+    .dash-nav-card {
+      background: white; border-radius: 16px; padding: 16px 18px;
+      display: flex; align-items: center; gap: 14px;
+      border: 1.5px solid var(--border);
+      box-shadow: 0 2px 8px rgba(59,35,20,0.06);
+      cursor: pointer; transition: transform 0.15s;
+    }
+    .dash-nav-card:active { transform: scale(0.98); }
+    .dash-nav-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .inv-icon { background: linear-gradient(135deg,#F5E6C8,#EDD9A3); }
+    .exp-icon { background: linear-gradient(135deg,#D4EDD4,#B8D9B8); }
+    .dash-nav-text { flex: 1; }
+    .dash-nav-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .dash-nav-sub   { font-size: 12px; color: var(--muted); }
+    .dash-nav-arrow { font-size: 22px; color: var(--muted); }
+
+    .dash-section-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .dash-recent-card   { background: white; border-radius: 14px; border: 1.5px solid var(--border); overflow: hidden; }
+    .dash-recent-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 13px 14px; border-bottom: 1px solid var(--border);
+    }
+    .dash-recent-item:last-child { border-bottom: none; }
+    .dash-recent-desc { font-size: 13px; font-weight: 600; color: var(--text); }
+    .dash-recent-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .dash-recent-amt  { font-size: 14px; font-weight: 700; color: var(--navy); flex-shrink: 0; }
+
+    /* ══════════════════════════════════════
+       SHARED SCREEN ELEMENTS
+    ══════════════════════════════════════ */
+    .back-btn {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: rgba(255,255,255,0.12); border: none; border-radius: 10px;
+      color: white; font-size: 22px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .dc-logo-sm { width: 30px; height: 30px; flex-shrink: 0; color: white; opacity: 0.6; }
+    .dc-logo-sm svg { width: 100%; height: 100%; }
+
+    /* ══════════════════════════════════════
+       INVENTORY
+    ══════════════════════════════════════ */
+    .inv-header {
+      background: var(--navy);
+      padding: 16px 20px 0;
+      flex-shrink: 0;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .inv-topbar {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    }
+    .inv-header-text { flex: 1; }
+    .inv-header-title { color: white; font-size: 17px; font-weight: 700; }
+    .inv-header-sub   { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 2px; }
+
+    .inv-tabs {
+      display: flex; gap: 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px 10px 0 0;
+      padding: 4px 4px 0;
+    }
+    .inv-tab {
+      flex: 1; text-align: center; padding: 10px 8px;
+      color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;
+      border-radius: 8px 8px 0 0; cursor: pointer; transition: all 0.2s;
+    }
+    .inv-tab.active { background: var(--bg); color: var(--navy); }
+
+    .inv-body { padding: 16px 16px 40px; overflow-y: auto; flex: 1; }
+    .inv-loading { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 14px; }
+
+    .inv-category  { margin-bottom: 24px; }
+    .inv-cat-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--muted); margin-bottom: 10px; padding: 0 2px;
+    }
+
+    .inv-item {
+      background: white; border-radius: 13px; padding: 13px 14px;
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 8px; border: 1.5px solid var(--border);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .inv-item.low { border-color: #F59E0B; background: #FFFBEB; }
+
+    .inv-item-info { flex: 1; min-width: 0; }
+    .inv-item-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .inv-item-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .inv-low-badge {
+      display: inline-block; margin-top: 4px;
+      font-size: 10px; font-weight: 700;
+      background: #FDE68A; color: #92400E;
+      padding: 2px 8px; border-radius: 20px;
+    }
+
+    .stepper {
+      display: flex; align-items: center; gap: 2px; flex-shrink: 0;
+    }
+    .stepper-btn {
+      width: 34px; height: 34px; border-radius: 9px;
+      border: 1.5px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 20px; font-weight: 500;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background 0.15s; flex-shrink: 0;
+    }
+    .stepper-btn:active { background: var(--border); }
+    .stepper-val {
+      min-width: 38px; text-align: center;
+      font-size: 16px; font-weight: 700; color: var(--text);
+    }
+
+    /* ══════════════════════════════════════
+       SHARED FORM ELEMENTS
+    ══════════════════════════════════════ */
+    .form-header {
+      background: var(--navy);
+      padding: 16px 20px 18px;
+      display: flex; align-items: center; gap: 12px;
+      flex-shrink: 0; position: sticky; top: 0; z-index: 10;
+    }
+    .form-header-text { flex: 1; }
+    .form-header-title { color: white; font-size: 17px; font-weight: 700; }
+    .form-header-sub   { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 2px; }
+
+    .form-body  { padding: 20px 16px 48px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; }
+    .form-field { display: flex; flex-direction: column; gap: 8px; }
+    .form-label { font-size: 13px; font-weight: 600; color: var(--text); }
+
+    .form-textarea {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid var(--border); border-radius: 11px;
+      font-size: 14px; color: var(--text); background: white;
+      resize: none; height: 90px; font-family: inherit;
+    }
+    .form-textarea:focus { outline: none; border-color: var(--gold); }
+
+    .chips-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 8px 16px; border-radius: 20px;
+      border: 1.5px solid var(--border); background: white;
+      font-size: 13px; font-weight: 600; color: var(--text);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .chip.active { background: var(--navy); border-color: var(--navy); color: white; }
+
+    .btn-submit {
+      width: 100%; padding: 16px;
+      background: var(--gold); color: white; border: none;
+      border-radius: 14px; font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: opacity 0.15s; margin-top: 4px;
+    }
+    .btn-submit:active { opacity: 0.82; }
+
+    .breakage-btn {
+      padding: 6px 10px; border-radius: 8px; flex-shrink: 0;
+      background: #FEE2E2; color: #991B1B;
+      border: 1px solid #FECACA; font-size: 11px; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
+    }
+
+    /* Breakage item card */
+    .breakage-item-card {
+      background: #FEE2E2; border-radius: 13px; padding: 14px 16px;
+      border: 1px solid #FECACA;
+    }
+    .breakage-item-name { font-size: 15px; font-weight: 700; color: #991B1B; }
+    .breakage-item-cat  { font-size: 12px; color: #EF4444; margin-top: 3px; }
 
     /* ══════════════════════════════════════
        LOGIN SCREEN
@@ -382,46 +608,202 @@
     </div>
   </div>
 
-  <!-- ══════════════ PLACEHOLDER (Step 3 replaces this) ══════════════ -->
+  <!-- ══════════════ DASHBOARD ══════════════ -->
   <div id="screen-home" class="screen">
-    <div class="placeholder-screen">
-      <div class="placeholder-logo">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <path id="hTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
-            <path id="hBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
-          </defs>
-          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
-          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
-          <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
-            <textPath href="#hTopArc" startOffset="18%">DOVER</textPath>
-          </text>
-          <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
-            <textPath href="#hBotArc" startOffset="11%">COTTAGE</textPath>
-          </text>
-          <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
-          <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
+
+    <!-- Header -->
+    <div class="dash-header">
+      <div class="dash-topbar">
+        <div class="dash-brand">
+          <div class="dash-logo">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <path id="dTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
+                <path id="dBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
+              </defs>
+              <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+              <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+              <circle cx="13" cy="50" r="2" fill="currentColor" opacity="0.8"/>
+              <circle cx="87" cy="50" r="2" fill="currentColor" opacity="0.8"/>
+              <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
+                <textPath href="#dTopArc" startOffset="18%">DOVER</textPath>
+              </text>
+              <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
+                <textPath href="#dBotArc" startOffset="11%">COTTAGE</textPath>
+              </text>
+              <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
+              <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
+            </svg>
+          </div>
+          <div class="dash-brand-text">
+            <div class="dash-brand-name">DOVER COTTAGE</div>
+            <div class="dash-brand-loc">Nuwara Eliya, Sri Lanka</div>
+          </div>
+        </div>
+        <button class="dash-signout-btn" onclick="doSignout()">Sign Out</button>
+      </div>
+
+      <div class="dash-greeting">
+        <div class="dash-greeting-text" id="dash-greeting">Good morning</div>
+        <div class="dash-date" id="dash-date">—</div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="dash-stats">
+        <div class="dash-stat-card">
+          <div class="dash-stat-label">Low Stock</div>
+          <div class="dash-stat-value warn" id="dash-low-count">—</div>
+          <div class="dash-stat-sub">items need restocking</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dash-stat-label">Total Items</div>
+          <div class="dash-stat-value" id="dash-total-count">—</div>
+          <div class="dash-stat-sub">in inventory</div>
+        </div>
+      </div>
+
+      <!-- Monthly spend -->
+      <div class="dash-spend-bar">
+        <div class="dash-spend-label" id="dash-month-label">This Month's Spending</div>
+        <div class="dash-spend-amount" id="dash-month-total">Rs. —</div>
+        <div class="dash-spend-sub" id="dash-month-sub">— expenses logged</div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="dash-body">
+
+      <!-- Low stock alert -->
+      <div class="dash-alert" id="dash-alert" style="display:none">
+        <div class="dash-alert-title">⚠️ Running Low</div>
+        <div id="dash-alert-list"></div>
+      </div>
+
+      <!-- Nav cards -->
+      <div class="dash-nav-card" onclick="goToInventory()">
+        <div class="dash-nav-icon inv-icon">📦</div>
+        <div class="dash-nav-text">
+          <div class="dash-nav-title">Inventory</div>
+          <div class="dash-nav-sub">Check and update stock levels</div>
+        </div>
+        <div class="dash-nav-arrow">›</div>
+      </div>
+
+      <div class="dash-nav-card" onclick="goToExpenses()">
+        <div class="dash-nav-icon exp-icon">💳</div>
+        <div class="dash-nav-text">
+          <div class="dash-nav-title">Expenses</div>
+          <div class="dash-nav-sub">Log and view all spending</div>
+        </div>
+        <div class="dash-nav-arrow">›</div>
+      </div>
+
+      <!-- Recent expenses -->
+      <div id="dash-recent-wrap" style="display:none">
+        <div class="dash-section-title">Recent Expenses</div>
+        <div class="dash-recent-card" id="dash-recent-list"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════ INVENTORY ══════════════ -->
+  <div id="screen-inventory" class="screen">
+
+    <div class="inv-header">
+      <div class="inv-topbar">
+        <button class="back-btn" onclick="switchTo('screen-home')">‹</button>
+        <div class="inv-header-text">
+          <div class="inv-header-title">📦 Inventory</div>
+          <div class="inv-header-sub" id="inv-header-sub">Tap any item to update its count</div>
+        </div>
+        <div class="dc-logo-sm">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
+            <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
+            <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
+            <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
+          </svg>
+        </div>
+      </div>
+      <div class="inv-tabs">
+        <div class="inv-tab active" id="tab-consumable" onclick="switchInvTab('consumable')">Consumable Supplies</div>
+        <div class="inv-tab" id="tab-property" onclick="switchInvTab('property')">Property Items 🔒</div>
+      </div>
+    </div>
+
+    <div class="inv-body" id="inv-body">
+      <div class="inv-loading">Loading inventory…</div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════ LOG BREAKAGE ══════════════ -->
+  <div id="screen-breakage" class="screen">
+
+    <div class="form-header" style="background:#991B1B">
+      <button class="back-btn" onclick="switchTo('screen-inventory')">‹</button>
+      <div class="form-header-text">
+        <div class="form-header-title">Log a Breakage</div>
+        <div class="form-header-sub">Record what broke and who reported it</div>
+      </div>
+      <div class="dc-logo-sm">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
+          <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
+          <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
+          <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
         </svg>
       </div>
-      <h2>You're in, <span class="placeholder-name" id="home-name">—</span>!</h2>
-      <p>Login is working. The dashboard is coming in the next step.</p>
-      <button class="btn-signout" onclick="doSignout()">Sign Out</button>
+    </div>
+
+    <div class="form-body">
+
+      <div class="breakage-item-card" id="breakage-item-card">
+        <div class="breakage-item-name" id="breakage-item-name">—</div>
+        <div class="breakage-item-cat"  id="breakage-item-cat">—</div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">What happened?</label>
+        <textarea id="breakage-desc" class="form-textarea"
+                  placeholder="Describe what broke or was damaged…"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Reported by</label>
+        <div class="chips-row" id="breakage-reporter"></div>
+      </div>
+
+      <button class="btn-submit" style="background:#991B1B" onclick="submitBreakage()">
+        Submit Report
+      </button>
+
     </div>
   </div>
 
   <!-- Overlays -->
-  <div id="loading" class="loading-overlay hidden"><div class="spinner"></div></div>
-  <div id="toast"   class="toast hidden"></div>
+  <div id="loading" class="loading-overlay hidden">
+    <div style="text-align:center">
+      <div class="spinner"></div>
+      <div id="loading-escape" style="display:none;margin-top:20px">
+        <button onclick="forceSignOut()" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);padding:10px 20px;border-radius:10px;font-size:13px;cursor:pointer">
+          Taking too long? Tap here
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="toast hidden"></div>
 
 </div>
 
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-
+<script>
 // ── Supabase ────────────────────────────────────────────────────────────
+const { createClient } = window.supabase;
 const db = createClient(
   'https://zcclpkmgsltjzgpuhrep.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjY2xwa21nc2x0anpncHVocmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzkyMDYsImV4cCI6MjA5MDExNTIwNn0.pSkoa1_jKdSWh8O83a5F8bbTme4v9QWjHWnTbpDqY_o'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjY2xwa21nc2x0anpncHVocmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzkyMDYsImV4cCI6MjA5MDExNTIwNn0.pSkoa1_jKdSWh8O83a5F8bbTme4v9QWjHWnTbpDqY_o',
+  { auth: { persistSession: false, autoRefreshToken: false } }
 );
 
 // ── Helpers ─────────────────────────────────────────────────────────────
@@ -461,13 +843,25 @@ window.doLogin = async function() {
   }
 
   loading.show();
-  const { error } = await db.auth.signInWithPassword({ email, password });
-  loading.hide();
-
+  const { data, error } = await db.auth.signInWithPassword({ email, password });
   if (error) {
+    loading.hide();
     showError('login-error', 'Incorrect email or password. Please try again.');
+    return;
   }
-  // success → handled by onAuthStateChange below
+
+  try {
+    const profile = await ensureProfile(data.user);
+    if (!profile) throw new Error('No profile');
+    currentUser    = data.user;
+    currentProfile = profile;
+    await loadDashboard(profile);
+    loading.hide();
+    switchTo('screen-home');
+  } catch (err) {
+    loading.hide();
+    showError('login-error', 'Signed in but could not load your data. Please try again.');
+  }
 };
 
 // ── Sign Up ──────────────────────────────────────────────────────────────
@@ -505,7 +899,8 @@ window.doSignup = async function() {
 
 // ── Ensure profile exists (called on every sign-in) ───────────────────────
 async function ensureProfile(user) {
-  const { data: existing } = await db
+  // Check if profile already exists
+  const { data: existing, error: fetchErr } = await db
     .from('profiles').select('id, name, role').eq('id', user.id).single();
 
   if (existing) return existing;
@@ -514,13 +909,21 @@ async function ensureProfile(user) {
   const pendingName = localStorage.getItem('dc_pending_name') || user.email.split('@')[0];
   localStorage.removeItem('dc_pending_name');
 
-  // First account ever → owner; everyone after → team
+  // First account gets owner role; everyone after gets team
   const { count } = await db.from('profiles').select('id', { count: 'exact', head: true });
   const role = (count === 0) ? 'owner' : 'team';
 
-  const { data: created } = await db.from('profiles').insert({
+  const { data: created, error: insertErr } = await db.from('profiles').insert({
     id: user.id, name: pendingName, role
   }).select().single();
+
+  if (insertErr) {
+    console.error('Profile insert failed:', insertErr.message);
+    // Last resort — try reading again (race condition guard)
+    const { data: retry } = await db
+      .from('profiles').select('id, name, role').eq('id', user.id).single();
+    return retry;
+  }
 
   return created;
 }
@@ -528,18 +931,229 @@ async function ensureProfile(user) {
 // ── Sign Out ─────────────────────────────────────────────────────────────
 window.doSignout = async function() {
   await db.auth.signOut();
+  switchTo('screen-login');
 };
 
-// ── Auth State ────────────────────────────────────────────────────────────
-db.auth.onAuthStateChange(async (event, session) => {
-  if (session?.user) {
-    const profile = await ensureProfile(session.user);
-    $('home-name').textContent = profile?.name?.split(' ')[0] || 'there';
-    switchTo('screen-home');
-  } else {
-    switchTo('screen-login');
+// ── Dashboard ─────────────────────────────────────────────────────────────
+async function loadDashboard(profile) {
+  // Greeting
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  $('dash-greeting').textContent = `${greet}, ${profile.name.split(' ')[0]}`;
+  $('dash-date').textContent = new Date().toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  // Inventory stats
+  const { data: items } = await db.from('inventory_items').select('id,quantity,min_threshold,name,unit');
+  const total = items?.length || 0;
+  const lowItems = (items || []).filter(i => i.quantity <= i.min_threshold);
+  $('dash-total-count').textContent = total;
+  $('dash-low-count').textContent   = lowItems.length;
+
+  if (lowItems.length > 0) {
+    $('dash-alert').style.display = 'block';
+    $('dash-alert-list').innerHTML = lowItems.slice(0, 5).map(i =>
+      `<div class="dash-alert-item">• ${i.name} — ${i.quantity} ${i.unit} left</div>`
+    ).join('') + (lowItems.length > 5
+      ? `<div class="dash-alert-item" style="font-weight:700;margin-top:4px">+${lowItems.length - 5} more items</div>`
+      : '');
   }
-});
+
+  // This month's spending
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  const monthName  = now.toLocaleDateString('en-GB', { month:'long', year:'numeric' });
+  const { data: monthExp } = await db.from('expenses').select('amount').gte('expense_date', monthStart);
+  const monthTotal = (monthExp || []).reduce((s, e) => s + Number(e.amount), 0);
+  $('dash-month-label').textContent = monthName;
+  $('dash-month-total').textContent = fmtCurrency(monthTotal);
+  $('dash-month-sub').textContent   = `${(monthExp || []).length} expense${(monthExp || []).length !== 1 ? 's' : ''} this month`;
+
+  // Recent expenses
+  const { data: recent } = await db.from('expenses')
+    .select('amount, description, category, expense_date, profiles(name)')
+    .order('created_at', { ascending: false }).limit(3);
+  if (recent && recent.length > 0) {
+    $('dash-recent-wrap').style.display = 'block';
+    $('dash-recent-list').innerHTML = recent.map(e => `
+      <div class="dash-recent-item">
+        <div>
+          <div class="dash-recent-desc">${e.description}</div>
+          <div class="dash-recent-meta">${e.category} · ${e.profiles?.name || '—'} · ${fmtDate(e.expense_date)}</div>
+        </div>
+        <div class="dash-recent-amt">${fmtCurrency(e.amount)}</div>
+      </div>`).join('');
+  }
+}
+
+function fmtCurrency(n) {
+  return 'Rs. ' + Number(n).toLocaleString('en-LK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+}
+
+// ── Inventory ─────────────────────────────────────────────────────────────
+let inventoryData = [];
+let activeInvTab  = 'consumable';
+let currentUser   = null;
+let currentProfile = null;
+
+window.goToInventory = async function() {
+  switchTo('screen-inventory');
+  $('inv-body').innerHTML = '<div class="inv-loading">Loading inventory…</div>';
+  const { data, error } = await db.from('inventory_items').select('*').order('name');
+  if (error) { $('inv-body').innerHTML = '<div class="inv-loading">Could not load inventory. Please try again.</div>'; return; }
+  inventoryData = data || [];
+  renderInventory();
+};
+
+window.switchInvTab = function(tab) {
+  activeInvTab = tab;
+  document.querySelectorAll('.inv-tab').forEach(t => t.classList.remove('active'));
+  $('tab-' + tab).classList.add('active');
+  $('inv-header-sub').textContent = tab === 'consumable'
+    ? 'Tap any item to update its count'
+    : 'Log breakages freely · Only owner edits counts';
+  renderInventory();
+};
+
+function renderInventory() {
+  const isOwner  = currentProfile?.role === 'owner';
+  const canEdit  = activeInvTab === 'consumable' || isOwner;
+  const filtered = inventoryData.filter(i => i.item_type === activeInvTab);
+
+  if (filtered.length === 0) {
+    $('inv-body').innerHTML = '<div class="inv-loading">No items found.</div>';
+    return;
+  }
+
+  // Group by category
+  const groups = {};
+  filtered.forEach(item => {
+    if (!groups[item.category]) groups[item.category] = [];
+    groups[item.category].push(item);
+  });
+
+  $('inv-body').innerHTML = Object.entries(groups).map(([cat, items]) => `
+    <div class="inv-category">
+      <div class="inv-cat-label">${cat}</div>
+      ${items.map(item => renderItem(item, canEdit)).join('')}
+    </div>
+  `).join('');
+}
+
+function renderItem(item, canEdit) {
+  const isLow      = item.quantity <= item.min_threshold;
+  const isProperty = item.item_type === 'property';
+
+  const rightSide = canEdit
+    ? `<div class="stepper">
+         <button class="stepper-btn" onclick="adjustQty('${item.id}', -1)">−</button>
+         <span class="stepper-val" id="qty-${item.id}">${item.quantity}</span>
+         <button class="stepper-btn" onclick="adjustQty('${item.id}', +1)">+</button>
+       </div>`
+    : `<div style="display:flex;align-items:center;gap:8px">
+         <span class="stepper-val">${item.quantity} <small style="font-size:11px;font-weight:400;color:var(--muted)">${item.unit}</small></span>
+         ${isProperty ? `<button class="breakage-btn" onclick="openBreakage('${item.id}')">⚠ Report</button>` : ''}
+       </div>`;
+
+  return `
+    <div class="inv-item ${isLow ? 'low' : ''}" id="inv-row-${item.id}">
+      <div class="inv-item-info">
+        <div class="inv-item-name">${item.name}</div>
+        <div class="inv-item-meta">${item.quantity} ${item.unit} · Min: ${item.min_threshold}</div>
+        ${isLow ? '<div class="inv-low-badge">⚠ Low Stock</div>' : ''}
+      </div>
+      ${rightSide}
+    </div>`;
+}
+
+window.adjustQty = async function(id, delta) {
+  const item = inventoryData.find(i => i.id === id);
+  if (!item) return;
+  const newQty = Math.max(0, item.quantity + delta);
+  if (newQty === item.quantity) return;
+
+  // Update UI immediately
+  item.quantity = newQty;
+  $(`qty-${id}`).textContent = newQty;
+  const row = $(`inv-row-${id}`);
+  if (newQty <= item.min_threshold) {
+    row.classList.add('low');
+    if (!row.querySelector('.inv-low-badge')) {
+      row.querySelector('.inv-item-meta').insertAdjacentHTML('afterend', '<div class="inv-low-badge">⚠ Low Stock</div>');
+    }
+  } else {
+    row.classList.remove('low');
+    row.querySelector('.inv-low-badge')?.remove();
+  }
+
+  // Save to database
+  const { error } = await db.from('inventory_items').update({ quantity: newQty }).eq('id', id);
+  if (error) {
+    // Revert on failure
+    item.quantity -= delta;
+    $(`qty-${id}`).textContent = item.quantity;
+    showToast('Could not save. Check your connection.', 'error');
+  }
+};
+
+// ── Breakage form ──────────────────────────────────────────────────────────
+let breakageItem    = null;
+let breakageReporter = null;
+let allProfiles     = [];
+
+async function loadProfiles() {
+  if (allProfiles.length > 0) return;
+  const { data } = await db.from('profiles').select('id, name');
+  allProfiles = data || [];
+}
+
+window.openBreakage = async function(itemId) {
+  breakageItem = inventoryData.find(i => i.id === itemId);
+  if (!breakageItem) return;
+
+  $('breakage-item-name').textContent = breakageItem.name;
+  $('breakage-item-cat').textContent  = breakageItem.category;
+  $('breakage-desc').value = '';
+
+  await loadProfiles();
+  breakageReporter = currentProfile?.id || null;
+  $('breakage-reporter').innerHTML = allProfiles.map(p => `
+    <div class="chip ${p.id === breakageReporter ? 'active' : ''}"
+         onclick="selectReporter('${p.id}', this)">${p.name}</div>
+  `).join('');
+
+  switchTo('screen-breakage');
+};
+
+window.selectReporter = function(id, el) {
+  breakageReporter = id;
+  $('breakage-reporter').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+};
+
+window.submitBreakage = async function() {
+  const desc = $('breakage-desc').value.trim();
+  if (!desc) { showToast('Please describe what happened.', 'error'); return; }
+
+  loading.show();
+  const { error } = await db.from('breakages').insert({
+    item_name:   breakageItem.name,
+    description: desc,
+    reported_by: breakageReporter || currentProfile?.id
+  });
+  loading.hide();
+
+  if (error) { showToast('Could not save. Please try again.', 'error'); return; }
+  showToast('Breakage report saved.', 'success');
+  switchTo('screen-inventory');
+};
+
+window.goToExpenses = function() { showToast('Expenses coming soon!'); };
+
+// ── Always start on the login screen ─────────────────────────────────────
+switchTo('screen-login');
 </script>
 </body>
 </html>
