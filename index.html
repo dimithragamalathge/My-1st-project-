@@ -788,13 +788,15 @@
 
     <div class="exp-header">
       <div class="exp-topbar">
-        <div>
-          <div class="exp-title">Expenses</div>
-          <div class="exp-sub">Track spending · View summaries</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="back-btn" onclick="switchTo('screen-home')">‹</button>
+          <div>
+            <div class="exp-title">Expenses</div>
+            <div class="exp-sub">Track spending · View summaries</div>
+          </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px">
           <button class="exp-add-btn" onclick="openLogExpense()">+</button>
-          
         </div>
       </div>
       <div class="exp-summary-bar">
