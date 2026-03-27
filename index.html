@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dover Cottage</title>
+  <style>
+    :root {
+      --navy:   #3B2314;
+      --gold:   #C4952A;
+      --amber:  #C97C1A;
+      --red:    #DC2626;
+      --bg:     #FAF6F0;
+      --white:  #FFFFFF;
+      --text:   #2C1810;
+      --muted:  #8C7B6E;
+      --border: #E8DDD0;
+      --green:  #16A34A;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #EDE5D8;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    /* ── APP SHELL ── */
+    .app {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      position: relative;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .screen.active { display: flex; }
+
+    /* ── LOADING OVERLAY ── */
+    .loading-overlay {
+      position: fixed; inset: 0;
+      background: rgba(59,35,20,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999;
+    }
+    .loading-overlay.hidden { display: none; }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 3px solid rgba(255,255,255,0.25);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--navy);
+      color: white;
+      padding: 13px 22px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 1000;
+      max-width: 320px;
+      text-align: center;
+      opacity: 1;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .toast.hidden  { opacity: 0; }
+    .toast.error   { background: #B91C1C; }
+    .toast.success { background: var(--green); }
+
+    /* ══════════════════════════════════════
+       LOGIN SCREEN
+    ══════════════════════════════════════ */
+    .login-bg {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 56px 28px 48px;
+    }
+
+    /* Logo */
+    .login-logo {
+      width: 110px; height: 110px;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .login-logo svg { width: 100%; height: 100%; }
+
+    /* Brand */
+    .login-brand {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .login-brand h1 {
+      color: white;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+    .login-brand p {
+      color: rgba(255,255,255,0.45);
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Card */
+    .login-card {
+      width: 100%;
+      background: white;
+      border-radius: 22px;
+      padding: 28px 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    }
+    .login-card h2 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 22px;
+    }
+
+    /* Form elements */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 7px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1.5px solid var(--border);
+      border-radius: 11px;
+      font-size: 16px;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-appearance: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus { outline: none; border-color: var(--gold); }
+    .form-input::placeholder { color: #C5B8AE; }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 13px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      letter-spacing: 0.3px;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:active { opacity: 0.82; }
+
+    .btn-outline {
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      color: var(--navy);
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.15s;
+    }
+    .btn-outline:active { background: var(--bg); }
+
+    /* Switch link */
+    .login-switch {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .login-switch a {
+      color: var(--gold);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* Error inline */
+    .field-error {
+      font-size: 12px;
+      color: #B91C1C;
+      margin-top: 5px;
+      display: none;
+    }
+    .field-error.visible { display: block; }
+
+    /* ══════════════════════════════════════
+       PLACEHOLDER — replaced in Step 3
+    ══════════════════════════════════════ */
+    .placeholder-screen {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 28px;
+      text-align: center;
+    }
+    .placeholder-logo {
+      width: 80px; height: 80px;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .placeholder-logo svg { width: 100%; height: 100%; }
+    .placeholder-screen h2 {
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .placeholder-screen p {
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .placeholder-name {
+      color: var(--gold);
+    }
+    .btn-signout {
+      padding: 13px 28px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ══════════════ LOGIN ══════════════ -->
+  <div id="screen-login" class="screen active">
+    <div class="login-bg">
+
+      <div class="login-logo">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="lTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
+            <path id="lBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
+          </defs>
+          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+          <circle cx="13" cy="50" r="2" fill="currentColor" opacity="0.8"/>
+          <circle cx="87" cy="50" r="2" fill="currentColor" opacity="0.8"/>
+          <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
+            <textPath href="#lTopArc" startOffset="18%">DOVER</textPath>
+          </text>
+          <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
+            <textPath href="#lBotArc" startOffset="11%">COTTAGE</textPath>
+          </text>
+          <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
+          <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
+        </svg>
+      </div>
+
+      <div class="login-brand">
+        <h1>DOVER COTTAGE</h1>
+        <p>Nuwara Eliya, Sri Lanka</p>
+      </div>
+
+      <div class="login-card">
+        <h2>Welcome back</h2>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="login-email" class="form-input"
+                 placeholder="your@email.com" autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" class="form-input"
+                 placeholder="••••••••" autocomplete="current-password">
+          <div class="field-error" id="login-error">Incorrect email or password. Please try again.</div>
+        </div>
+
+        <button class="btn-primary" onclick="doLogin()">Sign In</button>
+
+        <div class="login-switch">
+          New team member? <a onclick="switchTo('screen-signup')">Create an account</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════ SIGN UP ══════════════ -->
+  <div id="screen-signup" class="screen">
+    <div class="login-bg">
+
+      <div class="login-logo" style="width:70px;height:70px;margin-bottom:16px">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="sTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
+            <path id="sBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
+          </defs>
+          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+          <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
+            <textPath href="#sTopArc" startOffset="18%">DOVER</textPath>
+          </text>
+          <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
+            <textPath href="#sBotArc" startOffset="11%">COTTAGE</textPath>
+          </text>
+          <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
+          <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
+        </svg>
+      </div>
+
+      <div class="login-brand" style="margin-bottom:24px">
+        <h1>JOIN THE TEAM</h1>
+        <p>Dover Cottage · Nuwara Eliya</p>
+      </div>
+
+      <div class="login-card">
+        <h2>Create your account</h2>
+
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="signup-name" class="form-input"
+                 placeholder="e.g. Kasun Perera" autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="signup-email" class="form-input"
+                 placeholder="your@email.com" autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="signup-password" class="form-input"
+                 placeholder="At least 6 characters" autocomplete="new-password">
+          <div class="field-error" id="signup-error"></div>
+        </div>
+
+        <button class="btn-primary" onclick="doSignup()">Create Account</button>
+        <button class="btn-outline" onclick="switchTo('screen-login')">Back to Sign In</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════ PLACEHOLDER (Step 3 replaces this) ══════════════ -->
+  <div id="screen-home" class="screen">
+    <div class="placeholder-screen">
+      <div class="placeholder-logo">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="hTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
+            <path id="hBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
+          </defs>
+          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+          <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
+            <textPath href="#hTopArc" startOffset="18%">DOVER</textPath>
+          </text>
+          <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
+            <textPath href="#hBotArc" startOffset="11%">COTTAGE</textPath>
+          </text>
+          <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
+          <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
+        </svg>
+      </div>
+      <h2>You're in, <span class="placeholder-name" id="home-name">—</span>!</h2>
+      <p>Login is working. The dashboard is coming in the next step.</p>
+      <button class="btn-signout" onclick="doSignout()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- Overlays -->
+  <div id="loading" class="loading-overlay hidden"><div class="spinner"></div></div>
+  <div id="toast"   class="toast hidden"></div>
+
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+// ── Supabase ────────────────────────────────────────────────────────────
+const db = createClient(
+  'https://zcclpkmgsltjzgpuhrep.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjY2xwa21nc2x0anpncHVocmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzkyMDYsImV4cCI6MjA5MDExNTIwNn0.pSkoa1_jKdSWh8O83a5F8bbTme4v9QWjHWnTbpDqY_o'
+);
+
+// ── Helpers ─────────────────────────────────────────────────────────────
+const $  = id => document.getElementById(id);
+const loading = { show: () => $('loading').classList.remove('hidden'), hide: () => $('loading').classList.add('hidden') };
+
+function showToast(msg, type = '') {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = `toast ${type}`;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.add('hidden'), 3500);
+}
+
+function showError(id, msg) {
+  const el = $(id);
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+function clearError(id) { $(id).classList.remove('visible'); }
+
+// ── Navigation ───────────────────────────────────────────────────────────
+window.switchTo = function(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(screenId).classList.add('active');
+};
+
+// ── Login ────────────────────────────────────────────────────────────────
+window.doLogin = async function() {
+  const email    = $('login-email').value.trim();
+  const password = $('login-password').value;
+  clearError('login-error');
+
+  if (!email || !password) {
+    showError('login-error', 'Please enter your email and password.');
+    return;
+  }
+
+  loading.show();
+  const { error } = await db.auth.signInWithPassword({ email, password });
+  loading.hide();
+
+  if (error) {
+    showError('login-error', 'Incorrect email or password. Please try again.');
+  }
+  // success → handled by onAuthStateChange below
+};
+
+// ── Sign Up ──────────────────────────────────────────────────────────────
+window.doSignup = async function() {
+  const name     = $('signup-name').value.trim();
+  const email    = $('signup-email').value.trim();
+  const password = $('signup-password').value;
+  clearError('signup-error');
+
+  if (!name)              { showError('signup-error', 'Please enter your name.');           return; }
+  if (!email)             { showError('signup-error', 'Please enter your email.');          return; }
+  if (password.length < 6){ showError('signup-error', 'Password must be at least 6 characters.'); return; }
+
+  loading.show();
+
+  const { data, error } = await db.auth.signUp({ email, password });
+
+  if (error) {
+    loading.hide();
+    showError('signup-error', error.message || 'Could not create account. Please try again.');
+    return;
+  }
+
+  // Create profile record
+  const { error: profileErr } = await db.from('profiles').insert({
+    id:   data.user.id,
+    name: name,
+    role: 'team'   // owner role set manually via Supabase dashboard
+  });
+
+  loading.hide();
+
+  if (profileErr) {
+    showError('signup-error', 'Account created but setup incomplete. Please contact the owner.');
+    return;
+  }
+
+  showToast('Account created! Signing you in…', 'success');
+};
+
+// ── Sign Out ─────────────────────────────────────────────────────────────
+window.doSignout = async function() {
+  await db.auth.signOut();
+};
+
+// ── Auth State ────────────────────────────────────────────────────────────
+db.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    const { data: profile } = await db
+      .from('profiles').select('name').eq('id', session.user.id).single();
+    $('home-name').textContent = profile?.name?.split(' ')[0] || 'there';
+    switchTo('screen-home');
+  } else {
+    switchTo('screen-login');
+  }
+});
+</script>
+</body>
+</html>
