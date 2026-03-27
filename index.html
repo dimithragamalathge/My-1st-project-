@@ -565,8 +565,17 @@
   </div>
 
   <!-- Overlays -->
-  <div id="loading" class="loading-overlay hidden"><div class="spinner"></div></div>
-  <div id="toast"   class="toast hidden"></div>
+  <div id="loading" class="loading-overlay hidden">
+    <div style="text-align:center">
+      <div class="spinner"></div>
+      <div id="loading-escape" style="display:none;margin-top:20px">
+        <button onclick="forceSignOut()" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);padding:10px 20px;border-radius:10px;font-size:13px;cursor:pointer">
+          Taking too long? Tap here
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="toast hidden"></div>
 
 </div>
 
@@ -756,24 +765,42 @@ function fmtDate(d) {
 window.goToInventory = function() { showToast('Inventory coming in the next step!'); };
 window.goToExpenses  = function() { showToast('Expenses coming soon!'); };
 
+// ── Force sign out (escape hatch) ────────────────────────────────────────
+window.forceSignOut = async function() {
+  clearTimeout(window._escapeTimer);
+  $('loading').classList.add('hidden');
+  await db.auth.signOut();
+};
+
 // ── Auth State ────────────────────────────────────────────────────────────
 db.auth.onAuthStateChange(async (event, session) => {
+  clearTimeout(window._escapeTimer);
+  $('loading-escape').style.display = 'none';
+
   if (session?.user) {
     loading.show();
+
+    // Show escape button after 5 seconds if still loading
+    window._escapeTimer = setTimeout(() => {
+      $('loading-escape').style.display = 'block';
+    }, 5000);
+
     try {
       const profile = await ensureProfile(session.user);
       if (!profile) throw new Error('Profile could not be loaded.');
       await loadDashboard(profile);
+      clearTimeout(window._escapeTimer);
+      loading.hide();
       switchTo('screen-home');
     } catch (err) {
       console.error('Login error:', err);
+      clearTimeout(window._escapeTimer);
       loading.hide();
-      // Sign them out cleanly so they can try again
       await db.auth.signOut();
-      showToast('Something went wrong. Please sign in again.', 'error');
+      showToast('Something went wrong loading your data. Please sign in again.', 'error');
     }
-    loading.hide();
   } else {
+    loading.hide();
     switchTo('screen-login');
   }
 });
