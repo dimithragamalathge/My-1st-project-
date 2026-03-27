@@ -101,22 +101,7 @@
       margin-bottom: 18px;
     }
     .dash-brand { display: flex; align-items: center; gap: 11px; }
-    .dash-logo  {
-      width: 40px; height: 40px; flex-shrink: 0;
-      border: 1.5px solid rgba(196,149,42,0.55);
-      border-radius: 50%;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-    }
-    .dash-logo .mono-dc {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 14px; font-weight: normal;
-      color: var(--gold); letter-spacing: 2px; line-height: 1;
-    }
-    .dash-logo .mono-est {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 6px; letter-spacing: 2px;
-      color: rgba(255,255,255,0.4); margin-top: 1px;
-    }
+    .dash-logo  { width: 42px; height: 42px; flex-shrink: 0; }
     .dash-brand-name { color: white; font-size: 14px; font-weight: 700; letter-spacing: 1.5px; }
     .dash-brand-loc  { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 1px; }
     .dash-signout-btn {
@@ -195,17 +180,7 @@
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
     }
-    .dc-logo-sm {
-      width: 30px; height: 30px; flex-shrink: 0;
-      border: 1.5px solid rgba(196,149,42,0.45);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .dc-logo-sm .mono-sm {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 11px; font-weight: normal;
-      color: rgba(196,149,42,0.8); letter-spacing: 1px;
-    }
+    .dc-logo-sm { width: 30px; height: 30px; flex-shrink: 0; }
 
     /* ══════════════════════════════════════
        INVENTORY
@@ -458,29 +433,8 @@
       padding: 56px 28px 48px;
     }
 
-    /* Logo monogram */
-    .login-logo {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      margin-bottom: 20px;
-    }
-    .logo-mono-lg {
-      width: 90px; height: 90px;
-      border: 1.5px solid rgba(196,149,42,0.65);
-      border-radius: 50%;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 2px;
-    }
-    .logo-mono-lg .mono-dc {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 30px; font-weight: normal;
-      color: var(--gold); letter-spacing: 5px;
-      line-height: 1;
-    }
-    .logo-mono-lg .mono-est {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 7.5px; letter-spacing: 3.5px;
-      color: rgba(255,255,255,0.4); margin-top: 1px;
-    }
+    /* Logo */
+    .login-logo { margin-bottom: 20px; }
 
     /* Brand */
     .login-brand {
@@ -649,9 +603,21 @@
     <div class="login-bg">
 
       <div class="login-logo">
-        <div class="logo-mono-lg">
-          <span class="mono-dc">DC</span>
-        </div>
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:90px;height:90px;display:block">
+          <defs>
+            <path id="topArcLg" d="M 9,50 A 41,41 0 1,1 91,50"/>
+          </defs>
+          <circle cx="50" cy="50" r="47" fill="none" stroke="rgba(196,149,42,0.7)" stroke-width="1.5"/>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(196,149,42,0.2)" stroke-width="0.7"/>
+          <text text-anchor="middle" font-family="Georgia,'Times New Roman',serif"
+                font-size="7" fill="#C4952A" letter-spacing="2.8">
+            <textPath href="#topArcLg" startOffset="50%">DOVER · COTTAGE</textPath>
+          </text>
+          <text x="13" y="67" font-family="Georgia,'Times New Roman',serif"
+                font-size="46" fill="rgba(255,255,255,0.95)" font-style="italic">D</text>
+          <text x="38" y="67" font-family="Georgia,'Times New Roman',serif"
+                font-size="46" fill="#C4952A" font-style="italic">C</text>
+        </svg>
       </div>
 
       <div class="login-brand">
@@ -690,9 +656,21 @@
     <div class="login-bg">
 
       <div class="login-logo" style="margin-bottom:16px">
-        <div class="logo-mono-lg" style="width:70px;height:70px">
-          <span class="mono-dc" style="font-size:24px">DC</span>
-        </div>
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:70px;height:70px;display:block">
+          <defs>
+            <path id="topArcSu" d="M 9,50 A 41,41 0 1,1 91,50"/>
+          </defs>
+          <circle cx="50" cy="50" r="47" fill="none" stroke="rgba(196,149,42,0.7)" stroke-width="1.5"/>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(196,149,42,0.2)" stroke-width="0.7"/>
+          <text text-anchor="middle" font-family="Georgia,'Times New Roman',serif"
+                font-size="7" fill="#C4952A" letter-spacing="2.8">
+            <textPath href="#topArcSu" startOffset="50%">DOVER · COTTAGE</textPath>
+          </text>
+          <text x="13" y="67" font-family="Georgia,'Times New Roman',serif"
+                font-size="46" fill="rgba(255,255,255,0.95)" font-style="italic">D</text>
+          <text x="38" y="67" font-family="Georgia,'Times New Roman',serif"
+                font-size="46" fill="#C4952A" font-style="italic">C</text>
+        </svg>
       </div>
 
       <div class="login-brand" style="margin-bottom:24px">
@@ -737,7 +715,13 @@
       <div class="dash-topbar">
         <div class="dash-brand">
           <div class="dash-logo">
-            <span class="mono-dc">DC</span>
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:42px;height:42px;display:block">
+            <circle cx="50" cy="50" r="47" fill="none" stroke="rgba(196,149,42,0.65)" stroke-width="2"/>
+            <text x="11" y="70" font-family="Georgia,'Times New Roman',serif"
+                  font-size="50" fill="rgba(255,255,255,0.92)" font-style="italic">D</text>
+            <text x="38" y="70" font-family="Georgia,'Times New Roman',serif"
+                  font-size="50" fill="#C4952A" font-style="italic">C</text>
+          </svg>
           </div>
           <div class="dash-brand-text">
             <div class="dash-brand-name">DOVER COTTAGE</div>
@@ -824,7 +808,7 @@
         <div id="inv-add-btn" style="display:none">
           <button class="exp-add-btn" onclick="switchTo('screen-add-item')" title="Add item">+</button>
         </div>
-        <div class="dc-logo-sm"><span class="mono-sm">DC</span></div>
+        <div class="dc-logo-sm"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;display:block"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(196,149,42,0.55)" stroke-width="2.5"/><text x="11" y="70" font-family="Georgia,'Times New Roman',serif" font-size="50" fill="rgba(255,255,255,0.85)" font-style="italic">D</text><text x="38" y="70" font-family="Georgia,'Times New Roman',serif" font-size="50" fill="#C4952A" font-style="italic">C</text></svg></div>
       </div>
       <div class="inv-tabs">
         <div class="inv-tab active" id="tab-consumable" onclick="switchInvTab('consumable')">Consumable Supplies</div>
@@ -849,7 +833,7 @@
         </div>
         <div style="display:flex;align-items:center;gap:10px">
           <button class="exp-add-btn" onclick="openLogExpense()">+</button>
-          <div class="dc-logo-sm"><span class="mono-sm">DC</span></div>
+          <div class="dc-logo-sm"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;display:block"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(196,149,42,0.55)" stroke-width="2.5"/><text x="11" y="70" font-family="Georgia,'Times New Roman',serif" font-size="50" fill="rgba(255,255,255,0.85)" font-style="italic">D</text><text x="38" y="70" font-family="Georgia,'Times New Roman',serif" font-size="50" fill="#C4952A" font-style="italic">C</text></svg></div>
         </div>
       </div>
       <div class="exp-summary-bar">
@@ -897,7 +881,7 @@
         <div class="form-header-title">Add New Item</div>
         <div class="form-header-sub">Owner only · Item appears immediately</div>
       </div>
-      <div class="dc-logo-sm"><span class="mono-sm">DC</span></div>
+      <div class="dc-logo-sm"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;display:block"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(196,149,42,0.55)" stroke-width="2.5"/><text x="11" y="70" font-family="Georgia,'Times New Roman',serif" font-size="50" fill="rgba(255,255,255,0.85)" font-style="italic">D</text><text x="38" y="70" font-family="Georgia,'Times New Roman',serif" font-size="50" fill="#C4952A" font-style="italic">C</text></svg></div>
     </div>
 
     <div class="form-body">
@@ -959,7 +943,7 @@
         <div class="form-header-title">Log an Expense</div>
         <div class="form-header-sub">Fill in the details · Snap the receipt</div>
       </div>
-      <div class="dc-logo-sm"><span class="mono-sm">DC</span></div>
+      <div class="dc-logo-sm"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;display:block"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(196,149,42,0.55)" stroke-width="2.5"/><text x="11" y="70" font-family="Georgia,'Times New Roman',serif" font-size="50" fill="rgba(255,255,255,0.85)" font-style="italic">D</text><text x="38" y="70" font-family="Georgia,'Times New Roman',serif" font-size="50" fill="#C4952A" font-style="italic">C</text></svg></div>
     </div>
 
     <div class="form-body">
@@ -1028,7 +1012,7 @@
         <div class="form-header-title">Log a Breakage</div>
         <div class="form-header-sub">Record what broke and who reported it</div>
       </div>
-      <div class="dc-logo-sm"><span class="mono-sm">DC</span></div>
+      <div class="dc-logo-sm"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;display:block"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(196,149,42,0.55)" stroke-width="2.5"/><text x="11" y="70" font-family="Georgia,'Times New Roman',serif" font-size="50" fill="rgba(255,255,255,0.85)" font-style="italic">D</text><text x="38" y="70" font-family="Georgia,'Times New Roman',serif" font-size="50" fill="#C4952A" font-style="italic">C</text></svg></div>
     </div>
 
     <div class="form-body">
