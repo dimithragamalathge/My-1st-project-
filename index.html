@@ -102,7 +102,7 @@
     }
     .dash-brand { display: flex; align-items: center; gap: 11px; }
     .dash-logo  { width: 42px; height: 42px; color: var(--gold); flex-shrink: 0; }
-    .dash-logo svg { width: 100%; height: 100%; }
+    .dash-logo img { width: 100%; height: 100%; object-fit: contain; }
     .dash-brand-name { color: white; font-size: 14px; font-weight: 700; letter-spacing: 1.5px; }
     .dash-brand-loc  { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 1px; }
     .dash-signout-btn {
@@ -181,8 +181,8 @@
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
     }
-    .dc-logo-sm { width: 30px; height: 30px; flex-shrink: 0; color: white; opacity: 0.6; }
-    .dc-logo-sm svg { width: 100%; height: 100%; }
+    .dc-logo-sm { width: 30px; height: 30px; flex-shrink: 0; opacity: 0.75; }
+    .dc-logo-sm img { width: 100%; height: 100%; object-fit: contain; }
 
     /* ══════════════════════════════════════
        INVENTORY
@@ -441,7 +441,7 @@
       color: var(--gold);
       margin-bottom: 20px;
     }
-    .login-logo svg { width: 100%; height: 100%; }
+    .login-logo img { width: 100%; height: 100%; object-fit: contain; }
 
     /* Brand */
     .login-brand {
@@ -610,24 +610,7 @@
     <div class="login-bg">
 
       <div class="login-logo">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <path id="lTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
-            <path id="lBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
-          </defs>
-          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
-          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
-          <circle cx="13" cy="50" r="2" fill="currentColor" opacity="0.8"/>
-          <circle cx="87" cy="50" r="2" fill="currentColor" opacity="0.8"/>
-          <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
-            <textPath href="#lTopArc" startOffset="18%">DOVER</textPath>
-          </text>
-          <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
-            <textPath href="#lBotArc" startOffset="11%">COTTAGE</textPath>
-          </text>
-          <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
-          <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
-        </svg>
+        <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain">
       </div>
 
       <div class="login-brand">
@@ -666,22 +649,7 @@
     <div class="login-bg">
 
       <div class="login-logo" style="width:70px;height:70px;margin-bottom:16px">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <path id="sTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
-            <path id="sBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
-          </defs>
-          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
-          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
-          <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
-            <textPath href="#sTopArc" startOffset="18%">DOVER</textPath>
-          </text>
-          <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
-            <textPath href="#sBotArc" startOffset="11%">COTTAGE</textPath>
-          </text>
-          <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
-          <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
-        </svg>
+        <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain">
       </div>
 
       <div class="login-brand" style="margin-bottom:24px">
@@ -726,24 +694,7 @@
       <div class="dash-topbar">
         <div class="dash-brand">
           <div class="dash-logo">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <path id="dTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
-                <path id="dBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
-              </defs>
-              <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
-              <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
-              <circle cx="13" cy="50" r="2" fill="currentColor" opacity="0.8"/>
-              <circle cx="87" cy="50" r="2" fill="currentColor" opacity="0.8"/>
-              <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
-                <textPath href="#dTopArc" startOffset="18%">DOVER</textPath>
-              </text>
-              <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
-                <textPath href="#dBotArc" startOffset="11%">COTTAGE</textPath>
-              </text>
-              <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
-              <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
-            </svg>
+            <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain">
           </div>
           <div class="dash-brand-text">
             <div class="dash-brand-name">DOVER COTTAGE</div>
@@ -831,12 +782,7 @@
           <button class="exp-add-btn" onclick="switchTo('screen-add-item')" title="Add item">+</button>
         </div>
         <div class="dc-logo-sm">
-          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
-            <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
-            <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
-            <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
-          </svg>
+          <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="DC" style="width:100%;height:100%;object-fit:contain">
         </div>
       </div>
       <div class="inv-tabs">
@@ -863,12 +809,7 @@
         <div style="display:flex;align-items:center;gap:10px">
           <button class="exp-add-btn" onclick="openLogExpense()">+</button>
           <div class="dc-logo-sm">
-            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
-              <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
-              <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
-              <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
-            </svg>
+            <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="DC" style="width:100%;height:100%;object-fit:contain">
           </div>
         </div>
       </div>
@@ -918,12 +859,7 @@
         <div class="form-header-sub">Owner only · Item appears immediately</div>
       </div>
       <div class="dc-logo-sm">
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
-          <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
-          <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
-          <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
-        </svg>
+        <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="DC" style="width:100%;height:100%;object-fit:contain">
       </div>
     </div>
 
@@ -987,12 +923,7 @@
         <div class="form-header-sub">Fill in the details · Snap the receipt</div>
       </div>
       <div class="dc-logo-sm">
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
-          <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
-          <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
-          <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
-        </svg>
+        <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="DC" style="width:100%;height:100%;object-fit:contain">
       </div>
     </div>
 
@@ -1063,12 +994,7 @@
         <div class="form-header-sub">Record what broke and who reported it</div>
       </div>
       <div class="dc-logo-sm">
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
-          <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
-          <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
-          <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
-        </svg>
+        <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="DC" style="width:100%;height:100%;object-fit:contain">
       </div>
     </div>
 
