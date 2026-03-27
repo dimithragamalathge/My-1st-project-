@@ -660,7 +660,8 @@ window.doSignup = async function() {
 
 // ── Ensure profile exists (called on every sign-in) ───────────────────────
 async function ensureProfile(user) {
-  const { data: existing } = await db
+  // Check if profile already exists
+  const { data: existing, error: fetchErr } = await db
     .from('profiles').select('id, name, role').eq('id', user.id).single();
 
   if (existing) return existing;
@@ -669,13 +670,21 @@ async function ensureProfile(user) {
   const pendingName = localStorage.getItem('dc_pending_name') || user.email.split('@')[0];
   localStorage.removeItem('dc_pending_name');
 
-  // First account ever → owner; everyone after → team
+  // First account gets owner role; everyone after gets team
   const { count } = await db.from('profiles').select('id', { count: 'exact', head: true });
   const role = (count === 0) ? 'owner' : 'team';
 
-  const { data: created } = await db.from('profiles').insert({
+  const { data: created, error: insertErr } = await db.from('profiles').insert({
     id: user.id, name: pendingName, role
   }).select().single();
+
+  if (insertErr) {
+    console.error('Profile insert failed:', insertErr.message);
+    // Last resort — try reading again (race condition guard)
+    const { data: retry } = await db
+      .from('profiles').select('id, name, role').eq('id', user.id).single();
+    return retry;
+  }
 
   return created;
 }
@@ -751,10 +760,19 @@ window.goToExpenses  = function() { showToast('Expenses coming soon!'); };
 db.auth.onAuthStateChange(async (event, session) => {
   if (session?.user) {
     loading.show();
-    const profile = await ensureProfile(session.user);
-    await loadDashboard(profile);
+    try {
+      const profile = await ensureProfile(session.user);
+      if (!profile) throw new Error('Profile could not be loaded.');
+      await loadDashboard(profile);
+      switchTo('screen-home');
+    } catch (err) {
+      console.error('Login error:', err);
+      loading.hide();
+      // Sign them out cleanly so they can try again
+      await db.auth.signOut();
+      showToast('Something went wrong. Please sign in again.', 'error');
+    }
     loading.hide();
-    switchTo('screen-home');
   } else {
     switchTo('screen-login');
   }
