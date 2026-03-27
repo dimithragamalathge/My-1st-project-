@@ -101,8 +101,7 @@
       margin-bottom: 18px;
     }
     .dash-brand { display: flex; align-items: center; gap: 11px; }
-    .dash-logo  { width:42px; height:42px; flex-shrink:0; }
-    .dash-logo img { width:100%; height:100%; object-fit:contain; }
+
     .dash-brand-name { color: white; font-size: 14px; font-weight: 700; letter-spacing: 1.5px; }
     .dash-brand-loc  { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 1px; }
     .dash-signout-btn {
@@ -181,8 +180,7 @@
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
     }
-    .dc-logo-sm { width:30px; height:30px; flex-shrink:0; }
-    .dc-logo-sm img { width:100%; height:100%; object-fit:contain; }
+
 
     /* ══════════════════════════════════════
        INVENTORY
@@ -435,10 +433,6 @@
       padding: 56px 28px 48px;
     }
 
-    /* Logo */
-    .login-logo { width:110px; height:110px; margin-bottom:20px; }
-    .login-logo img { width:100%; height:100%; object-fit:contain; }
-
     /* Brand */
     .login-brand {
       text-align: center;
@@ -446,15 +440,24 @@
     }
     .login-brand h1 {
       color: white;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      margin-bottom: 4px;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 26px;
+      font-weight: normal;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .login-brand-rule {
+      width: 40px; height: 1px;
+      background: var(--gold);
+      margin: 0 auto 10px;
+      opacity: 0.7;
     }
     .login-brand p {
-      color: rgba(255,255,255,0.45);
-      font-size: 13px;
-      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.4);
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
     }
 
     /* Card */
@@ -604,13 +607,9 @@
   <!-- ══════════════ LOGIN ══════════════ -->
   <div id="screen-login" class="screen active">
     <div class="login-bg">
-
-            <div class="login-logo">
-        <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain">
-      </div>
-
       <div class="login-brand">
         <h1>DOVER COTTAGE</h1>
+        <div class="login-brand-rule"></div>
         <p>Nuwara Eliya, Sri Lanka</p>
       </div>
 
@@ -643,13 +642,9 @@
   <!-- ══════════════ SIGN UP ══════════════ -->
   <div id="screen-signup" class="screen">
     <div class="login-bg">
-
-            <div class="login-logo" style="width:70px;height:70px;margin-bottom:16px">
-        <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain">
-      </div>
-
       <div class="login-brand" style="margin-bottom:24px">
         <h1>JOIN THE TEAM</h1>
+        <div class="login-brand-rule"></div>
         <p>Dover Cottage · Nuwara Eliya</p>
       </div>
 
@@ -689,9 +684,6 @@
     <div class="dash-header">
       <div class="dash-topbar">
         <div class="dash-brand">
-                    <div class="dash-logo">
-            <img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain">
-          </div>
           <div class="dash-brand-text">
             <div class="dash-brand-name">DOVER COTTAGE</div>
             <div class="dash-brand-loc">Nuwara Eliya, Sri Lanka</div>
@@ -777,7 +769,7 @@
         <div id="inv-add-btn" style="display:none">
           <button class="exp-add-btn" onclick="switchTo('screen-add-item')" title="Add item">+</button>
         </div>
-        <div class="dc-logo-sm"><img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain"></div>
+        
       </div>
       <div class="inv-tabs">
         <div class="inv-tab active" id="tab-consumable" onclick="switchInvTab('consumable')">Consumable Supplies</div>
@@ -802,7 +794,7 @@
         </div>
         <div style="display:flex;align-items:center;gap:10px">
           <button class="exp-add-btn" onclick="openLogExpense()">+</button>
-          <div class="dc-logo-sm"><img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain"></div>
+          
         </div>
       </div>
       <div class="exp-summary-bar">
@@ -850,7 +842,7 @@
         <div class="form-header-title">Add New Item</div>
         <div class="form-header-sub">Owner only · Item appears immediately</div>
       </div>
-      <div class="dc-logo-sm"><img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain"></div>
+      
     </div>
 
     <div class="form-body">
@@ -912,7 +904,7 @@
         <div class="form-header-title">Log an Expense</div>
         <div class="form-header-sub">Fill in the details · Snap the receipt</div>
       </div>
-      <div class="dc-logo-sm"><img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain"></div>
+      
     </div>
 
     <div class="form-body">
@@ -981,7 +973,7 @@
         <div class="form-header-title">Log a Breakage</div>
         <div class="form-header-sub">Record what broke and who reported it</div>
       </div>
-      <div class="dc-logo-sm"><img src="https://zcclpkmgsltjzgpuhrep.supabase.co/storage/v1/object/public/receipts/logo-white.png" alt="Dover Cottage" style="width:100%;height:100%;object-fit:contain"></div>
+      
     </div>
 
     <div class="form-body">
