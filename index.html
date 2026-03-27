@@ -172,6 +172,91 @@
     .dash-recent-amt  { font-size: 14px; font-weight: 700; color: var(--navy); flex-shrink: 0; }
 
     /* ══════════════════════════════════════
+       SHARED SCREEN ELEMENTS
+    ══════════════════════════════════════ */
+    .back-btn {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: rgba(255,255,255,0.12); border: none; border-radius: 10px;
+      color: white; font-size: 22px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .dc-logo-sm { width: 30px; height: 30px; flex-shrink: 0; color: white; opacity: 0.6; }
+    .dc-logo-sm svg { width: 100%; height: 100%; }
+
+    /* ══════════════════════════════════════
+       INVENTORY
+    ══════════════════════════════════════ */
+    .inv-header {
+      background: var(--navy);
+      padding: 16px 20px 0;
+      flex-shrink: 0;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .inv-topbar {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    }
+    .inv-header-text { flex: 1; }
+    .inv-header-title { color: white; font-size: 17px; font-weight: 700; }
+    .inv-header-sub   { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 2px; }
+
+    .inv-tabs {
+      display: flex; gap: 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px 10px 0 0;
+      padding: 4px 4px 0;
+    }
+    .inv-tab {
+      flex: 1; text-align: center; padding: 10px 8px;
+      color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;
+      border-radius: 8px 8px 0 0; cursor: pointer; transition: all 0.2s;
+    }
+    .inv-tab.active { background: var(--bg); color: var(--navy); }
+
+    .inv-body { padding: 16px 16px 40px; overflow-y: auto; flex: 1; }
+    .inv-loading { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 14px; }
+
+    .inv-category  { margin-bottom: 24px; }
+    .inv-cat-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--muted); margin-bottom: 10px; padding: 0 2px;
+    }
+
+    .inv-item {
+      background: white; border-radius: 13px; padding: 13px 14px;
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 8px; border: 1.5px solid var(--border);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .inv-item.low { border-color: #F59E0B; background: #FFFBEB; }
+
+    .inv-item-info { flex: 1; min-width: 0; }
+    .inv-item-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .inv-item-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .inv-low-badge {
+      display: inline-block; margin-top: 4px;
+      font-size: 10px; font-weight: 700;
+      background: #FDE68A; color: #92400E;
+      padding: 2px 8px; border-radius: 20px;
+    }
+
+    .stepper {
+      display: flex; align-items: center; gap: 2px; flex-shrink: 0;
+    }
+    .stepper-btn {
+      width: 34px; height: 34px; border-radius: 9px;
+      border: 1.5px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 20px; font-weight: 500;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background 0.15s; flex-shrink: 0;
+    }
+    .stepper-btn:active { background: var(--border); }
+    .stepper-val {
+      min-width: 38px; text-align: center;
+      font-size: 16px; font-weight: 700; color: var(--text);
+    }
+
+    /* ══════════════════════════════════════
        LOGIN SCREEN
     ══════════════════════════════════════ */
     .login-bg {
@@ -565,6 +650,37 @@
     </div>
   </div>
 
+  <!-- ══════════════ INVENTORY ══════════════ -->
+  <div id="screen-inventory" class="screen">
+
+    <div class="inv-header">
+      <div class="inv-topbar">
+        <button class="back-btn" onclick="switchTo('screen-home')">‹</button>
+        <div class="inv-header-text">
+          <div class="inv-header-title">📦 Inventory</div>
+          <div class="inv-header-sub" id="inv-header-sub">Tap any item to update its count</div>
+        </div>
+        <div class="dc-logo-sm">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
+            <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
+            <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
+            <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
+          </svg>
+        </div>
+      </div>
+      <div class="inv-tabs">
+        <div class="inv-tab active" id="tab-consumable" onclick="switchInvTab('consumable')">Consumable Supplies</div>
+        <div class="inv-tab" id="tab-property" onclick="switchInvTab('property')">Property Items 🔒</div>
+      </div>
+    </div>
+
+    <div class="inv-body" id="inv-body">
+      <div class="inv-loading">Loading inventory…</div>
+    </div>
+
+  </div>
+
   <!-- Overlays -->
   <div id="loading" class="loading-overlay hidden">
     <div style="text-align:center">
@@ -636,6 +752,8 @@ window.doLogin = async function() {
   try {
     const profile = await ensureProfile(data.user);
     if (!profile) throw new Error('No profile');
+    currentUser    = data.user;
+    currentProfile = profile;
     await loadDashboard(profile);
     loading.hide();
     switchTo('screen-home');
@@ -773,9 +891,108 @@ function fmtDate(d) {
   return new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'short' });
 }
 
-// Placeholders for next steps (wired to nav cards)
-window.goToInventory = function() { showToast('Inventory coming in the next step!'); };
-window.goToExpenses  = function() { showToast('Expenses coming soon!'); };
+// ── Inventory ─────────────────────────────────────────────────────────────
+let inventoryData = [];
+let activeInvTab  = 'consumable';
+let currentUser   = null;
+let currentProfile = null;
+
+window.goToInventory = async function() {
+  switchTo('screen-inventory');
+  $('inv-body').innerHTML = '<div class="inv-loading">Loading inventory…</div>';
+  const { data, error } = await db.from('inventory_items').select('*').order('name');
+  if (error) { $('inv-body').innerHTML = '<div class="inv-loading">Could not load inventory. Please try again.</div>'; return; }
+  inventoryData = data || [];
+  renderInventory();
+};
+
+window.switchInvTab = function(tab) {
+  activeInvTab = tab;
+  document.querySelectorAll('.inv-tab').forEach(t => t.classList.remove('active'));
+  $('tab-' + tab).classList.add('active');
+  $('inv-header-sub').textContent = tab === 'consumable'
+    ? 'Tap any item to update its count'
+    : 'Log breakages freely · Only owner edits counts';
+  renderInventory();
+};
+
+function renderInventory() {
+  const isOwner  = currentProfile?.role === 'owner';
+  const canEdit  = activeInvTab === 'consumable' || isOwner;
+  const filtered = inventoryData.filter(i => i.item_type === activeInvTab);
+
+  if (filtered.length === 0) {
+    $('inv-body').innerHTML = '<div class="inv-loading">No items found.</div>';
+    return;
+  }
+
+  // Group by category
+  const groups = {};
+  filtered.forEach(item => {
+    if (!groups[item.category]) groups[item.category] = [];
+    groups[item.category].push(item);
+  });
+
+  $('inv-body').innerHTML = Object.entries(groups).map(([cat, items]) => `
+    <div class="inv-category">
+      <div class="inv-cat-label">${cat}</div>
+      ${items.map(item => renderItem(item, canEdit)).join('')}
+    </div>
+  `).join('');
+}
+
+function renderItem(item, canEdit) {
+  const isLow = item.quantity <= item.min_threshold;
+  return `
+    <div class="inv-item ${isLow ? 'low' : ''}" id="inv-row-${item.id}">
+      <div class="inv-item-info">
+        <div class="inv-item-name">${item.name}</div>
+        <div class="inv-item-meta">Min: ${item.min_threshold} ${item.unit}</div>
+        ${isLow ? '<div class="inv-low-badge">⚠ Low Stock</div>' : ''}
+      </div>
+      ${canEdit ? `
+        <div class="stepper">
+          <button class="stepper-btn" onclick="adjustQty('${item.id}', -1)">−</button>
+          <span class="stepper-val" id="qty-${item.id}">${item.quantity}</span>
+          <button class="stepper-btn" onclick="adjustQty('${item.id}', +1)">+</button>
+        </div>
+      ` : `
+        <span class="stepper-val">${item.quantity} <small style="font-size:11px;font-weight:400;color:var(--muted)">${item.unit}</small></span>
+      `}
+    </div>`;
+}
+
+window.adjustQty = async function(id, delta) {
+  const item = inventoryData.find(i => i.id === id);
+  if (!item) return;
+  const newQty = Math.max(0, item.quantity + delta);
+  if (newQty === item.quantity) return;
+
+  // Update UI immediately
+  item.quantity = newQty;
+  $(`qty-${id}`).textContent = newQty;
+  const row = $(`inv-row-${id}`);
+  if (newQty <= item.min_threshold) {
+    row.classList.add('low');
+    if (!row.querySelector('.inv-low-badge')) {
+      row.querySelector('.inv-item-meta').insertAdjacentHTML('afterend', '<div class="inv-low-badge">⚠ Low Stock</div>');
+    }
+  } else {
+    row.classList.remove('low');
+    row.querySelector('.inv-low-badge')?.remove();
+  }
+
+  // Save to database
+  const { error } = await db.from('inventory_items').update({ quantity: newQty }).eq('id', id);
+  if (error) {
+    // Revert on failure
+    item.quantity -= delta;
+    $(`qty-${id}`).textContent = item.quantity;
+    showToast('Could not save. Check your connection.', 'error');
+  }
+};
+
+window.goToExpenses = function() { showToast('Expenses coming soon!'); };
 
 // ── Always start on the login screen ─────────────────────────────────────
 switchTo('screen-login');
