@@ -827,6 +827,9 @@
           <div class="inv-header-title">📦 Inventory</div>
           <div class="inv-header-sub" id="inv-header-sub">Tap any item to update its count</div>
         </div>
+        <div id="inv-add-btn" style="display:none">
+          <button class="exp-add-btn" onclick="switchTo('screen-add-item')" title="Add item">+</button>
+        </div>
         <div class="dc-logo-sm">
           <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
             <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
@@ -903,6 +906,75 @@
       <button class="exp-csv-btn" onclick="downloadCSV()">⬇️ Download as CSV</button>
     </div>
 
+  </div>
+
+  <!-- ══════════════ ADD INVENTORY ITEM ══════════════ -->
+  <div id="screen-add-item" class="screen">
+
+    <div class="form-header">
+      <button class="back-btn" onclick="switchTo('screen-inventory')">‹</button>
+      <div class="form-header-text">
+        <div class="form-header-title">Add New Item</div>
+        <div class="form-header-sub">Owner only · Item appears immediately</div>
+      </div>
+      <div class="dc-logo-sm">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
+          <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
+          <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
+          <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="form-body">
+
+      <div class="form-field">
+        <label class="form-label">Item Name</label>
+        <input type="text" id="ai-name" class="form-input" placeholder="e.g. Hand Sanitiser">
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Type</label>
+        <div class="chips-row">
+          <div class="chip active" data-type="consumable" onclick="selectItemType(this)">Consumable Supply</div>
+          <div class="chip"       data-type="property"   onclick="selectItemType(this)">Property Item</div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Category</label>
+        <select id="ai-category" class="form-input">
+          <option value="Toiletries & Bathroom">Toiletries &amp; Bathroom</option>
+          <option value="Cleaning Products">Cleaning Products</option>
+          <option value="Kitchen & Pantry">Kitchen &amp; Pantry</option>
+          <option value="Linens & Bedding">Linens &amp; Bedding</option>
+          <option value="Furniture & Equipment">Furniture &amp; Equipment</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Unit <span style="font-weight:400;color:var(--muted)">(e.g. bottles, pieces, kg)</span></label>
+        <input type="text" id="ai-unit" class="form-input" placeholder="e.g. bottles">
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-field">
+          <label class="form-label">Starting Qty</label>
+          <input type="number" id="ai-qty" class="form-input" placeholder="0" min="0" inputmode="numeric">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Low Stock Alert</label>
+          <input type="number" id="ai-min" class="form-input" placeholder="5" min="0" inputmode="numeric">
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:-10px">
+        You'll get a warning when stock drops to or below the alert number.
+      </div>
+
+      <button class="btn-submit" onclick="submitNewItem()">Add to Inventory</button>
+
+    </div>
   </div>
 
   <!-- ══════════════ LOG EXPENSE ══════════════ -->
@@ -1243,11 +1315,66 @@ let currentProfile = null;
 
 window.goToInventory = async function() {
   switchTo('screen-inventory');
+  // Show Add button only for owner
+  $('inv-add-btn').style.display = currentProfile?.role === 'owner' ? 'block' : 'none';
   $('inv-body').innerHTML = '<div class="inv-loading">Loading inventory…</div>';
   const { data, error } = await db.from('inventory_items').select('*').order('name');
   if (error) { $('inv-body').innerHTML = '<div class="inv-loading">Could not load inventory. Please try again.</div>'; return; }
   inventoryData = data || [];
   renderInventory();
+};
+
+// ── Add Inventory Item ─────────────────────────────────────────────────────
+let selectedItemType = 'consumable';
+
+window.selectItemType = function(el) {
+  selectedItemType = el.dataset.type;
+  el.closest('.chips-row').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  // Switch category options based on type
+  const catSelect = $('ai-category');
+  if (selectedItemType === 'consumable') {
+    catSelect.innerHTML = `
+      <option value="Toiletries & Bathroom">Toiletries &amp; Bathroom</option>
+      <option value="Cleaning Products">Cleaning Products</option>
+      <option value="Kitchen & Pantry">Kitchen &amp; Pantry</option>`;
+  } else {
+    catSelect.innerHTML = `
+      <option value="Linens & Bedding">Linens &amp; Bedding</option>
+      <option value="Furniture & Equipment">Furniture &amp; Equipment</option>
+      <option value="Kitchen & Pantry">Kitchen &amp; Pantry</option>`;
+  }
+};
+
+window.submitNewItem = async function() {
+  const name = $('ai-name').value.trim();
+  const cat  = $('ai-category').value;
+  const unit = $('ai-unit').value.trim();
+  const qty  = parseInt($('ai-qty').value) || 0;
+  const min  = parseInt($('ai-min').value) || 1;
+
+  if (!name) { showToast('Please enter an item name.', 'error'); return; }
+  if (!unit) { showToast('Please enter a unit (e.g. bottles).', 'error'); return; }
+
+  loading.show();
+  const { error } = await db.from('inventory_items').insert({
+    name, category: cat, unit,
+    quantity: qty, min_threshold: min,
+    item_type: selectedItemType
+  });
+  loading.hide();
+
+  if (error) { showToast('Could not save. Please try again.', 'error'); return; }
+
+  showToast(`${name} added to inventory!`, 'success');
+  // Reset form
+  $('ai-name').value = ''; $('ai-unit').value = '';
+  $('ai-qty').value  = ''; $('ai-min').value  = '';
+  selectedItemType = 'consumable';
+  document.querySelectorAll('#screen-add-item .chip').forEach((c, i) => c.classList.toggle('active', i === 0));
+
+  // Reload inventory and go back
+  await goToInventory();
 };
 
 window.switchInvTab = function(tab) {
