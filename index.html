@@ -140,6 +140,16 @@
     .dash-alert-title { font-size: 13px; font-weight: 700; color: #92400E; margin-bottom: 8px; }
     .dash-alert-item  { font-size: 13px; color: #78350F; padding: 2px 0; }
 
+    .dash-log-btn {
+      width: 100%; padding: 18px;
+      background: var(--gold); color: white;
+      border: none; border-radius: 16px;
+      font-size: 17px; font-weight: 700; letter-spacing: 0.5px;
+      cursor: pointer; transition: transform 0.15s, opacity 0.15s;
+      box-shadow: 0 4px 16px rgba(196,149,42,0.35);
+    }
+    .dash-log-btn:active { transform: scale(0.97); opacity: 0.9; }
+
     .dash-nav-card {
       background: white; border-radius: 16px; padding: 16px 18px;
       display: flex; align-items: center; gap: 14px;
@@ -698,16 +708,11 @@
       </div>
 
       <!-- Stats row -->
-      <div class="dash-stats">
+      <div class="dash-stats" style="grid-template-columns:1fr">
         <div class="dash-stat-card">
           <div class="dash-stat-label">Low Stock</div>
           <div class="dash-stat-value warn" id="dash-low-count">—</div>
           <div class="dash-stat-sub">items need restocking</div>
-        </div>
-        <div class="dash-stat-card">
-          <div class="dash-stat-label">Total Items</div>
-          <div class="dash-stat-value" id="dash-total-count">—</div>
-          <div class="dash-stat-sub">in inventory</div>
         </div>
       </div>
 
@@ -738,11 +743,13 @@
         <div class="dash-nav-arrow">›</div>
       </div>
 
+      <button class="dash-log-btn" onclick="openLogExpense()">+ Log an Expense</button>
+
       <div class="dash-nav-card" onclick="goToExpenses()">
-        <div class="dash-nav-icon exp-icon">💳</div>
+        <div class="dash-nav-icon exp-icon">📊</div>
         <div class="dash-nav-text">
-          <div class="dash-nav-title">Expenses</div>
-          <div class="dash-nav-sub">Log and view all spending</div>
+          <div class="dash-nav-title">View Expenses</div>
+          <div class="dash-nav-sub">Full log, summaries & reports</div>
         </div>
         <div class="dash-nav-arrow">›</div>
       </div>
@@ -1165,10 +1172,8 @@ async function loadDashboard(profile) {
 
   // Inventory stats
   const { data: items } = await db.from('inventory_items').select('id,quantity,min_threshold,name,unit');
-  const total = items?.length || 0;
   const lowItems = (items || []).filter(i => i.quantity <= i.min_threshold);
-  $('dash-total-count').textContent = total;
-  $('dash-low-count').textContent   = lowItems.length;
+  $('dash-low-count').textContent = lowItems.length;
 
   if (lowItems.length > 0) {
     $('dash-alert').style.display = 'block';
