@@ -1,1572 +1,529 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dover Cottage — Staff App Mockup</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dover Cottage</title>
+  <style>
+    :root {
+      --navy:   #3B2314;
+      --gold:   #C4952A;
+      --amber:  #C97C1A;
+      --red:    #DC2626;
+      --bg:     #FAF6F0;
+      --white:  #FFFFFF;
+      --text:   #2C1810;
+      --muted:  #8C7B6E;
+      --border: #E8DDD0;
+      --green:  #16A34A;
+    }
 
-  :root {
-    --navy:   #3B2314;
-    --gold:   #C4952A;
-    --amber:  #C97C1A;
-    --red:    #DC2626;
-    --bg:     #FAF6F0;
-    --white:  #FFFFFF;
-    --text:   #2C1810;
-    --muted:  #8C7B6E;
-    --border: #E8DDD0;
-    --green:  #16A34A;
-  }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #EDE5D8;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
 
-  body {
-    background: #EDE5D8;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding: 32px 16px;
-    gap: 24px;
-  }
+    /* ── APP SHELL ── */
+    .app {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      position: relative;
+      background: var(--bg);
+      overflow: hidden;
+    }
 
-  .page-title {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #7A7068;
-  }
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .screen.active { display: flex; }
 
-  .phone-row {
-    display: flex;
-    gap: 32px;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-  }
+    /* ── LOADING OVERLAY ── */
+    .loading-overlay {
+      position: fixed; inset: 0;
+      background: rgba(59,35,20,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999;
+    }
+    .loading-overlay.hidden { display: none; }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 3px solid rgba(255,255,255,0.25);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-  .phone-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--navy);
+      color: white;
+      padding: 13px 22px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 1000;
+      max-width: 320px;
+      text-align: center;
+      opacity: 1;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .toast.hidden  { opacity: 0; }
+    .toast.error   { background: #B91C1C; }
+    .toast.success { background: var(--green); }
 
-  .screen-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #9A9088;
-  }
+    /* ══════════════════════════════════════
+       LOGIN SCREEN
+    ══════════════════════════════════════ */
+    .login-bg {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 56px 28px 48px;
+    }
 
-  .phone {
-    width: 375px;
-    height: 780px;
-    background: var(--bg);
-    border-radius: 44px;
-    overflow: hidden;
-    box-shadow:
-      0 0 0 10px #1A1A1A,
-      0 0 0 12px #2A2A2A,
-      0 30px 60px rgba(0,0,0,0.35);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
+    /* Logo */
+    .login-logo {
+      width: 110px; height: 110px;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .login-logo svg { width: 100%; height: 100%; }
 
-  /* Notch */
-  .phone::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 120px; height: 28px;
-    background: #1A1A1A;
-    border-radius: 0 0 20px 20px;
-    z-index: 100;
-  }
+    /* Brand */
+    .login-brand {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .login-brand h1 {
+      color: white;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+    .login-brand p {
+      color: rgba(255,255,255,0.45);
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
 
-  /* ─── SHARED COMPONENTS ─────────────────────── */
+    /* Card */
+    .login-card {
+      width: 100%;
+      background: white;
+      border-radius: 22px;
+      padding: 28px 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    }
+    .login-card h2 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 22px;
+    }
 
-  .status-bar {
-    height: 44px;
-    background: var(--navy);
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 0 24px 6px;
-    flex-shrink: 0;
-  }
-  .status-bar span { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 600; }
+    /* Form elements */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 7px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1.5px solid var(--border);
+      border-radius: 11px;
+      font-size: 16px;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-appearance: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus { outline: none; border-color: var(--gold); }
+    .form-input::placeholder { color: #C5B8AE; }
 
-  .screen-content {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
-  .screen-content::-webkit-scrollbar { display: none; }
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 13px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      letter-spacing: 0.3px;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:active { opacity: 0.82; }
 
-  .bottom-nav {
-    height: 70px;
-    background: var(--white);
-    border-top: 1px solid var(--border);
-    display: flex;
-    flex-shrink: 0;
-  }
-  .nav-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    cursor: pointer;
-  }
-  .nav-item.active .nav-icon { color: var(--navy); }
-  .nav-item.active .nav-label { color: var(--navy); font-weight: 700; }
-  .nav-icon { font-size: 20px; color: var(--muted); }
-  .nav-label { font-size: 10px; color: var(--muted); font-weight: 500; letter-spacing: 0.03em; }
-  .nav-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--gold);
-    position: absolute;
-    top: 10px; right: 22px;
-  }
+    .btn-outline {
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      color: var(--navy);
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.15s;
+    }
+    .btn-outline:active { background: var(--bg); }
 
-  /* ─── DOVER COTTAGE BRANDING ─────────────────────── */
-  .dc-brand-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding-bottom: 16px;
-    margin-bottom: 4px;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-  }
-  .dc-logo-wrap {
-    width: 54px;
-    height: 54px;
-    flex-shrink: 0;
-    color: white;
-  }
-  .dc-logo-wrap svg { width: 100%; height: 100%; }
-  .dc-property-name {
-    color: white;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    font-family: Georgia, 'Times New Roman', serif;
-    line-height: 1.1;
-  }
-  .dc-location {
-    color: rgba(255,255,255,0.5);
-    font-size: 10px;
-    margin-top: 4px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
+    /* Switch link */
+    .login-switch {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .login-switch a {
+      color: var(--gold);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
 
-  /* ─── SCREEN 1: DASHBOARD ─────────────────────── */
+    /* Error inline */
+    .field-error {
+      font-size: 12px;
+      color: #B91C1C;
+      margin-top: 5px;
+      display: none;
+    }
+    .field-error.visible { display: block; }
 
-  .dash-header {
-    background: var(--navy);
-    padding: 20px 20px 28px;
-  }
-  .dash-greeting {
-    color: rgba(255,255,255,0.6);
-    font-size: 13px;
-    margin-bottom: 2px;
-  }
-  .dash-title {
-    color: #fff;
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-  .dash-subtitle {
-    color: rgba(255,255,255,0.5);
-    font-size: 12px;
-    margin-top: 4px;
-  }
-
-  .alert-banner {
-    background: linear-gradient(135deg, #5C2A10, #8B3F1A);
-    margin: -14px 16px 0;
-    border-radius: 14px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 4px 16px rgba(180,83,9,0.35);
-    position: relative;
-    z-index: 1;
-  }
-  .alert-icon { font-size: 22px; }
-  .alert-text { flex: 1; }
-  .alert-text strong { color: #FEF3C7; font-size: 13px; font-weight: 700; display: block; }
-  .alert-text span { color: #FDE68A; font-size: 11px; }
-  .alert-arrow { color: #FDE68A; font-size: 16px; }
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 20px 10px;
-  }
-  .section-title {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .section-link {
-    font-size: 12px;
-    color: var(--gold);
-    font-weight: 600;
-  }
-
-  .category-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding: 0 16px 16px;
-  }
-  .cat-card {
-    background: var(--white);
-    border-radius: 18px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    position: relative;
-    overflow: hidden;
-  }
-  .cat-card.has-alert::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--amber);
-    border-radius: 18px 18px 0 0;
-  }
-  .cat-emoji { font-size: 28px; margin-bottom: 8px; display: block; }
-  .cat-name { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.2; }
-  .cat-count { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .cat-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: #FEF3C7;
-    color: #92400E;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 20px;
-    margin-top: 8px;
-  }
-  .cat-badge-ok {
-    background: #DCFCE7;
-    color: #166534;
-  }
-
-  .quick-stats {
-    display: flex;
-    gap: 10px;
-    padding: 0 16px 20px;
-  }
-  .stat-card {
-    flex: 1;
-    background: var(--white);
-    border-radius: 16px;
-    padding: 14px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  }
-  .stat-num {
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--navy);
-    line-height: 1;
-  }
-  .stat-label { font-size: 10px; color: var(--muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-
-  /* ─── EXPENSE SNAPSHOT (dashboard) ─── */
-  .exp-snapshot {
-    margin: 0 16px 4px;
-    background: var(--navy);
-    border-radius: 20px;
-    padding: 18px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 6px 20px rgba(27,42,74,0.2);
-  }
-  .exp-snapshot::before {
-    content: '';
-    position: absolute;
-    top: -30px; right: -30px;
-    width: 120px; height: 120px;
-    background: rgba(200,144,42,0.12);
-    border-radius: 50%;
-  }
-  .exp-snapshot::after {
-    content: '';
-    position: absolute;
-    bottom: -40px; right: 30px;
-    width: 90px; height: 90px;
-    background: rgba(200,144,42,0.07);
-    border-radius: 50%;
-  }
-  .exp-snap-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 14px;
-    position: relative;
-    z-index: 1;
-  }
-  .exp-snap-label { color: rgba(255,255,255,0.55); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-  .exp-snap-amount { color: #fff; font-size: 26px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
-  .exp-snap-sub { color: rgba(255,255,255,0.45); font-size: 11px; margin-top: 3px; }
-  .exp-snap-link {
-    background: rgba(200,144,42,0.2);
-    color: var(--gold);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 20px;
-    letter-spacing: 0.03em;
-    flex-shrink: 0;
-  }
-  .exp-snap-bars {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    position: relative;
-    z-index: 1;
-  }
-  .exp-bar-row { display: flex; align-items: center; gap: 8px; }
-  .exp-bar-cat { color: rgba(255,255,255,0.65); font-size: 11px; width: 76px; flex-shrink: 0; }
-  .exp-bar-track { flex: 1; height: 5px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
-  .exp-bar-fill { height: 100%; border-radius: 10px; background: var(--gold); }
-  .exp-bar-val { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; width: 70px; text-align: right; flex-shrink: 0; }
-
-  /* ─── SCREEN 2: INVENTORY DETAIL ─────────────────── */
-
-  .detail-header {
-    background: var(--navy);
-    padding: 16px 20px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .back-btn {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.12);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; color: white;
-    flex-shrink: 0;
-  }
-  .detail-header-text { flex: 1; }
-  .detail-emoji { font-size: 28px; }
-  .detail-title { color: white; font-size: 18px; font-weight: 700; margin-bottom: 2px; }
-  .detail-sub { color: rgba(255,255,255,0.55); font-size: 12px; }
-
-  .dc-logo-sm {
-    width: 30px;
-    height: 30px;
-    flex-shrink: 0;
-    color: white;
-    opacity: 0.65;
-  }
-  .dc-logo-sm svg { width: 100%; height: 100%; }
-
-  .item-list { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-
-  .item-row {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    position: relative;
-    overflow: hidden;
-  }
-  .item-row.low::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 4px;
-    background: var(--amber);
-  }
-  .item-row.critical::before { background: var(--red); }
-
-  .item-icon { font-size: 22px; width: 36px; text-align: center; flex-shrink: 0; }
-  .item-info { flex: 1; }
-  .item-name { font-size: 14px; font-weight: 600; color: var(--text); }
-  .item-unit { font-size: 11px; color: var(--muted); }
-
-  .item-qty-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-  .item-qty { font-size: 20px; font-weight: 800; color: var(--navy); line-height: 1; }
-  .item-qty.low-text { color: var(--amber); }
-  .item-qty.critical-text { color: var(--red); }
-  .item-status {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 20px;
-  }
-  .status-ok { background: #DCFCE7; color: #166534; }
-  .status-low { background: #FEF3C7; color: #92400E; }
-  .status-critical { background: #FEE2E2; color: #991B1B; }
-
-  .fab {
-    position: absolute;
-    bottom: 80px;
-    right: 16px;
-    width: 52px; height: 52px;
-    background: var(--gold);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-    color: white;
-    box-shadow: 0 4px 16px rgba(200,144,42,0.5);
-    font-weight: 300;
-  }
-
-  /* ─── INVENTORY TABS ─────────────────────── */
-  .inv-tabs {
-    display: flex;
-    margin: 0;
-  }
-  .inv-tab {
-    flex: 1;
-    text-align: center;
-    padding: 11px 0;
-    font-size: 12px;
-    font-weight: 700;
-    color: rgba(255,255,255,0.45);
-    border-bottom: 2.5px solid transparent;
-    letter-spacing: 0.04em;
-  }
-  .inv-tab.active {
-    color: white;
-    border-bottom-color: var(--gold);
-  }
-
-  /* ─── PROPERTY ITEMS ─────────────────────── */
-  .prop-row {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 14px 16px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    position: relative;
-    overflow: hidden;
-  }
-  .prop-row.has-breakage::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 4px;
-    background: var(--red);
-  }
-  .prop-top {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .prop-info { flex: 1; }
-  .prop-name { font-size: 14px; font-weight: 600; color: var(--text); }
-  .prop-counts { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .prop-counts span { color: var(--red); font-weight: 700; }
-  .prop-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-  .prop-qty { font-size: 20px; font-weight: 800; color: var(--navy); line-height: 1; }
-  .prop-qty.damaged { color: var(--red); }
-  .breakage-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: #FEF2F2;
-    color: #DC2626;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    margin-top: 10px;
-  }
-  .owner-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: #F5EAD8;
-    color: var(--navy);
-    font-size: 9px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 20px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  /* ─── BREAKAGE FORM ─────────────────────── */
-  .breakage-item-banner {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: #FFF1F2;
-    border: 1.5px solid #FECDD3;
-    border-radius: 16px;
-    padding: 14px 16px;
-  }
-  .bi-icon { font-size: 28px; flex-shrink: 0; }
-  .bi-info { flex: 1; }
-  .bi-name { font-size: 15px; font-weight: 700; color: var(--text); }
-  .bi-count { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-  .stepper {
-    display: flex;
-    align-items: center;
-    background: white;
-    border-radius: 16px;
-    padding: 10px 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    border: 1.5px solid var(--border);
-    gap: 0;
-  }
-  .stepper-btn {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: #FEF2F2;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; font-weight: 700;
-    color: #DC2626;
-    flex-shrink: 0;
-  }
-  .stepper-val {
-    flex: 1;
-    text-align: center;
-    font-size: 32px;
-    font-weight: 800;
-    color: var(--text);
-    line-height: 1;
-  }
-
-  .people-row { display: flex; gap: 8px; }
-  .person-chip {
-    flex: 1;
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    background: white; border-radius: 12px; padding: 10px 8px;
-    border: 1.5px solid var(--border);
-    font-size: 12px; font-weight: 600; color: var(--muted);
-  }
-  .person-chip.selected {
-    background: #F5EAD8;
-    border-color: var(--navy);
-    color: var(--navy);
-  }
-
-  /* ─── ENHANCED EXPENSE FORM ─────────────────────── */
-  .cat-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-  }
-  .cat-option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    background: white;
-    border-radius: 14px;
-    padding: 12px 8px;
-    border: 1.5px solid var(--border);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-  }
-  .cat-option.selected {
-    background: #F5EAD8;
-    border-color: var(--navy);
-  }
-  .cat-option-icon { font-size: 22px; }
-  .cat-option-label {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--muted);
-    text-align: center;
-    letter-spacing: 0.02em;
-  }
-  .cat-option.selected .cat-option-label { color: var(--navy); }
-
-  .receipt-actions {
-    display: flex;
-    gap: 10px;
-  }
-  .receipt-action-btn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    background: white;
-    border-radius: 14px;
-    padding: 14px 8px;
-    border: 1.5px solid var(--border);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-  }
-  .receipt-action-icon { font-size: 24px; }
-  .receipt-action-label { font-size: 11px; font-weight: 700; color: var(--muted); }
-
-  .receipt-attached {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #F0FDF4;
-    border: 1.5px solid #86EFAC;
-    border-radius: 14px;
-    padding: 12px 14px;
-    margin-top: 8px;
-  }
-  .receipt-thumb {
-    width: 44px; height: 44px;
-    border-radius: 10px;
-    background: #DCFCE7;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-  .receipt-attached-info { flex: 1; }
-  .receipt-attached-name { font-size: 13px; font-weight: 700; color: #166534; }
-  .receipt-attached-sub { font-size: 11px; color: #4ADE80; margin-top: 1px; }
-  .receipt-attached-remove { font-size: 18px; color: #86EFAC; }
-
-  /* ─── SCREEN 3: EXPENSE LOG ─────────────────────── */
-
-  .exp-header {
-    background: var(--navy);
-    padding: 20px 20px 28px;
-  }
-  .exp-title { color: white; font-size: 22px; font-weight: 700; }
-  .exp-sub { color: rgba(255,255,255,0.55); font-size: 12px; margin-top: 4px; }
-
-  .exp-summary-cards {
-    display: flex;
-    gap: 10px;
-    margin: -14px 16px 0;
-    position: relative;
-    z-index: 1;
-  }
-  .exp-sum-card {
-    flex: 1;
-    background: white;
-    border-radius: 16px;
-    padding: 14px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    text-align: center;
-  }
-  .exp-sum-amount { font-size: 20px; font-weight: 800; color: var(--navy); }
-  .exp-sum-label { font-size: 10px; color: var(--muted); margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-
-  .month-tabs {
-    display: flex;
-    gap: 8px;
-    padding: 20px 16px 10px;
-    overflow-x: auto;
-  }
-  .month-tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-    flex-shrink: 0;
-    background: var(--border);
-    color: var(--muted);
-  }
-  .tab.active { background: var(--navy); color: white; }
-
-  .exp-list { padding: 0 16px 80px; display: flex; flex-direction: column; gap: 10px; }
-  .exp-item {
-    background: white;
-    border-radius: 16px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-  .exp-cat-dot {
-    width: 40px; height: 40px;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .dot-clean { background: #F0EAE0; }
-  .dot-kitchen { background: #FFF7ED; }
-  .dot-linen { background: #F0FDF4; }
-  .dot-toilet { background: #FDF4FF; }
-  .dot-maint { background: #FFF1F2; }
-
-  .exp-info { flex: 1; }
-  .exp-name { font-size: 14px; font-weight: 600; color: var(--text); }
-  .exp-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .exp-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-  .exp-amount { font-size: 16px; font-weight: 800; color: var(--text); }
-  .receipt-chip {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    background: #F5EAD8;
-    color: var(--navy);
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  /* ─── SCREEN 4: LOG EXPENSE FORM ─────────────────── */
-
-  .form-header {
-    background: var(--navy);
-    padding: 16px 20px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .form-title { color: white; font-size: 18px; font-weight: 700; }
-
-  .form-body { padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; }
-
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-
-  .amount-input {
-    background: white;
-    border-radius: 16px;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    border: 2px solid var(--gold);
-  }
-  .currency { font-size: 20px; font-weight: 700; color: var(--muted); }
-  .amount-val { font-size: 28px; font-weight: 800; color: var(--text); flex: 1; }
-  .cursor { width: 2px; height: 30px; background: var(--gold); border-radius: 2px; animation: blink 1s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-  .select-field {
-    background: white;
-    border-radius: 16px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    border: 1.5px solid var(--border);
-  }
-  .select-val { font-size: 15px; font-weight: 600; color: var(--text); }
-  .select-arrow { color: var(--muted); font-size: 14px; }
-
-  .text-field {
-    background: white;
-    border-radius: 16px;
-    padding: 14px 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    border: 1.5px solid var(--border);
-    font-size: 15px;
-    color: var(--text);
-    font-family: inherit;
-    resize: none;
-  }
-
-  .receipt-upload {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    border: 2px dashed var(--border);
-    text-align: center;
-  }
-  .receipt-icon { font-size: 32px; }
-  .receipt-upload-text { font-size: 14px; font-weight: 600; color: var(--text); }
-  .receipt-upload-sub { font-size: 12px; color: var(--muted); }
-  .receipt-cta {
-    background: #F5EAD8;
-    color: var(--navy);
-    font-size: 12px;
-    font-weight: 700;
-    padding: 8px 20px;
-    border-radius: 20px;
-    margin-top: 4px;
-  }
-
-  .submit-btn {
-    background: var(--navy);
-    color: white;
-    border-radius: 16px;
-    padding: 18px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    margin: 0 16px 20px;
-    box-shadow: 0 6px 20px rgba(27,42,74,0.35);
-  }
-
-</style>
+    /* ══════════════════════════════════════
+       PLACEHOLDER — replaced in Step 3
+    ══════════════════════════════════════ */
+    .placeholder-screen {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 28px;
+      text-align: center;
+    }
+    .placeholder-logo {
+      width: 80px; height: 80px;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .placeholder-logo svg { width: 100%; height: 100%; }
+    .placeholder-screen h2 {
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .placeholder-screen p {
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .placeholder-name {
+      color: var(--gold);
+    }
+    .btn-signout {
+      padding: 13px 28px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
+<div class="app">
 
-<p class="page-title">Dover Cottage — Staff App · Design Preview</p>
+  <!-- ══════════════ LOGIN ══════════════ -->
+  <div id="screen-login" class="screen active">
+    <div class="login-bg">
 
-<div class="phone-row">
-
-  <!-- ═══════════════════════════════════════
-       SCREEN 1: MAIN DASHBOARD
-  ═══════════════════════════════════════ -->
-  <div class="phone-wrap">
-    <div class="screen-label">1 — Main Dashboard</div>
-    <div class="phone">
-      <div class="status-bar">
-        <span>9:41</span>
-        <span>●●●  WiFi  🔋</span>
+      <div class="login-logo">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="lTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
+            <path id="lBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
+          </defs>
+          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+          <circle cx="13" cy="50" r="2" fill="currentColor" opacity="0.8"/>
+          <circle cx="87" cy="50" r="2" fill="currentColor" opacity="0.8"/>
+          <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
+            <textPath href="#lTopArc" startOffset="18%">DOVER</textPath>
+          </text>
+          <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
+            <textPath href="#lBotArc" startOffset="11%">COTTAGE</textPath>
+          </text>
+          <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
+          <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
+        </svg>
       </div>
 
-      <div class="screen-content">
-        <div class="dash-header">
-          <!-- Dover Cottage Brand Header -->
-          <div class="dc-brand-header">
-            <div class="dc-logo-wrap">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                <defs>
-                  <path id="topArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
-                  <path id="botArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
-                </defs>
-                <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
-                <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
-                <circle cx="13" cy="50" r="2" fill="currentColor" opacity="0.8"/>
-                <circle cx="87" cy="50" r="2" fill="currentColor" opacity="0.8"/>
-                <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
-                  <textPath href="#topArc" startOffset="18%">DOVER</textPath>
-                </text>
-                <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
-                  <textPath href="#botArc" startOffset="11%">COTTAGE</textPath>
-                </text>
-                <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
-                <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
-              </svg>
-            </div>
-            <div>
-              <div class="dc-property-name">Dover Cottage</div>
-              <div class="dc-location">Nuwara Eliya · Sri Lanka</div>
-            </div>
-          </div>
-          <div class="dash-greeting">Good morning, Maria 👋</div>
-          <div class="dash-subtitle">Wednesday, 25 March 2026</div>
+      <div class="login-brand">
+        <h1>DOVER COTTAGE</h1>
+        <p>Nuwara Eliya, Sri Lanka</p>
+      </div>
+
+      <div class="login-card">
+        <h2>Welcome back</h2>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="login-email" class="form-input"
+                 placeholder="your@email.com" autocomplete="email">
         </div>
 
-        <!-- Alert banner -->
-        <div class="alert-banner">
-          <div class="alert-icon">⚠️</div>
-          <div class="alert-text">
-            <strong>3 items need restocking</strong>
-            <span>Tap to see what's running low</span>
-          </div>
-          <div class="alert-arrow">›</div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" class="form-input"
+                 placeholder="••••••••" autocomplete="current-password">
+          <div class="field-error" id="login-error">Incorrect email or password. Please try again.</div>
         </div>
 
-        <!-- Stats row -->
-        <div class="section-header" style="padding-top:24px;">
-          <div class="section-title">At a Glance</div>
-        </div>
-        <div class="quick-stats">
-          <div class="stat-card">
-            <div class="stat-num">24</div>
-            <div class="stat-label">Items Tracked</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" style="color:var(--amber)">3</div>
-            <div class="stat-label">Need Restock</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" style="color:var(--green)">21</div>
-            <div class="stat-label">All Good</div>
-          </div>
-        </div>
+        <button class="btn-primary" onclick="doLogin()">Sign In</button>
 
-        <!-- Expense snapshot -->
-        <div class="section-header">
-          <div class="section-title">Expenses — March 2026</div>
-          <div class="section-link">See All ›</div>
-        </div>
-        <div class="exp-snapshot">
-          <div class="exp-snap-top">
-            <div>
-              <div class="exp-snap-label">Total spent this month</div>
-              <div class="exp-snap-amount">Rs. 42,500</div>
-              <div class="exp-snap-sub">6 entries · by 2 team members</div>
-            </div>
-            <div class="exp-snap-link">View All ›</div>
-          </div>
-          <div class="exp-snap-bars">
-            <div class="exp-bar-row">
-              <div class="exp-bar-cat">🧹 Cleaning</div>
-              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:65%"></div></div>
-              <div class="exp-bar-val">Rs. 18,200</div>
-            </div>
-            <div class="exp-bar-row">
-              <div class="exp-bar-cat">🛏 Linens</div>
-              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:43%"></div></div>
-              <div class="exp-bar-val">Rs. 12,800</div>
-            </div>
-            <div class="exp-bar-row">
-              <div class="exp-bar-cat">☕ Kitchen</div>
-              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:28%"></div></div>
-              <div class="exp-bar-val">Rs. 7,600</div>
-            </div>
-            <div class="exp-bar-row">
-              <div class="exp-bar-cat">🧴 Toiletries</div>
-              <div class="exp-bar-track"><div class="exp-bar-fill" style="width:13%"></div></div>
-              <div class="exp-bar-val">Rs. 3,900</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Category cards -->
-        <div class="section-header">
-          <div class="section-title">Supply Categories</div>
-        </div>
-        <div class="category-grid">
-          <div class="cat-card has-alert">
-            <span class="cat-emoji">🧴</span>
-            <div class="cat-name">Toiletries & Bathroom</div>
-            <div class="cat-count">6 items total</div>
-            <div class="cat-badge">⚠ 2 items low</div>
-          </div>
-          <div class="cat-card">
-            <span class="cat-emoji">🛏</span>
-            <div class="cat-name">Linens & Bedding</div>
-            <div class="cat-count">5 items total</div>
-            <div class="cat-badge cat-badge-ok">✓ All good</div>
-          </div>
-          <div class="cat-card has-alert">
-            <span class="cat-emoji">🧹</span>
-            <div class="cat-name">Cleaning Products</div>
-            <div class="cat-count">7 items total</div>
-            <div class="cat-badge">⚠ 1 item low</div>
-          </div>
-          <div class="cat-card">
-            <span class="cat-emoji">☕</span>
-            <div class="cat-name">Kitchen & Pantry</div>
-            <div class="cat-count">6 items total</div>
-            <div class="cat-badge cat-badge-ok">✓ All good</div>
-          </div>
+        <div class="login-switch">
+          New team member? <a onclick="switchTo('screen-signup')">Create an account</a>
         </div>
       </div>
 
-      <div class="bottom-nav">
-        <div class="nav-item active">
-          <div class="nav-icon">📊</div>
-          <div class="nav-label">Dashboard</div>
-        </div>
-        <div class="nav-item" style="position:relative">
-          <div class="nav-icon">📦</div>
-          <div class="nav-label">Inventory</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-icon">🧾</div>
-          <div class="nav-label">Expenses</div>
-        </div>
-      </div>
     </div>
   </div>
 
+  <!-- ══════════════ SIGN UP ══════════════ -->
+  <div id="screen-signup" class="screen">
+    <div class="login-bg">
 
-  <!-- ═══════════════════════════════════════
-       SCREEN 2: INVENTORY — CONSUMABLE SUPPLIES
-  ═══════════════════════════════════════ -->
-  <div class="phone-wrap">
-    <div class="screen-label">2 — Consumable Supplies</div>
-    <div class="phone">
-      <div class="status-bar">
-        <span>9:41</span>
-        <span>●●●  WiFi  🔋</span>
+      <div class="login-logo" style="width:70px;height:70px;margin-bottom:16px">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="sTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
+            <path id="sBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
+          </defs>
+          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+          <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
+            <textPath href="#sTopArc" startOffset="18%">DOVER</textPath>
+          </text>
+          <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
+            <textPath href="#sBotArc" startOffset="11%">COTTAGE</textPath>
+          </text>
+          <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
+          <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
+        </svg>
       </div>
 
-      <div class="screen-content">
-        <div class="detail-header" style="flex-direction:column;align-items:stretch;gap:0">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-            <div class="back-btn">‹</div>
-            <div class="detail-header-text">
-              <div class="detail-title">📦 Inventory</div>
-              <div class="detail-sub">Tap any item to update its count</div>
-            </div>
-            <div class="dc-logo-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/><text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text><text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text></svg></div>
-          </div>
-          <div class="inv-tabs">
-            <div class="inv-tab active">Consumable Supplies</div>
-            <div class="inv-tab">Property Items 🔒</div>
-          </div>
-        </div>
-
-        <div class="item-list">
-          <div class="item-row critical">
-            <div class="item-icon">🧻</div>
-            <div class="item-info">
-              <div class="item-name">Toilet Paper</div>
-              <div class="item-unit">rolls · min. 8</div>
-            </div>
-            <div class="item-qty-wrap">
-              <div class="item-qty critical-text">3</div>
-              <div class="item-status status-critical">Critical</div>
-            </div>
-          </div>
-
-          <div class="item-row low">
-            <div class="item-icon">🧴</div>
-            <div class="item-info">
-              <div class="item-name">Shampoo</div>
-              <div class="item-unit">bottles · min. 4</div>
-            </div>
-            <div class="item-qty-wrap">
-              <div class="item-qty low-text">2</div>
-              <div class="item-status status-low">Low</div>
-            </div>
-          </div>
-
-          <div class="item-row">
-            <div class="item-icon">🫧</div>
-            <div class="item-info">
-              <div class="item-name">Hand Soap</div>
-              <div class="item-unit">pumps · min. 4</div>
-            </div>
-            <div class="item-qty-wrap">
-              <div class="item-qty">6</div>
-              <div class="item-status status-ok">Good</div>
-            </div>
-          </div>
-
-          <div class="item-row low">
-            <div class="item-icon">🧹</div>
-            <div class="item-info">
-              <div class="item-name">Floor Cleaner</div>
-              <div class="item-unit">bottles · min. 3</div>
-            </div>
-            <div class="item-qty-wrap">
-              <div class="item-qty low-text">1</div>
-              <div class="item-status status-low">Low</div>
-            </div>
-          </div>
-
-          <div class="item-row">
-            <div class="item-icon">🧼</div>
-            <div class="item-info">
-              <div class="item-name">Bar Soap (Guest)</div>
-              <div class="item-unit">bars · min. 8</div>
-            </div>
-            <div class="item-qty-wrap">
-              <div class="item-qty">12</div>
-              <div class="item-status status-ok">Good</div>
-            </div>
-          </div>
-
-          <div class="item-row">
-            <div class="item-icon">☕</div>
-            <div class="item-info">
-              <div class="item-name">Tea Bags</div>
-              <div class="item-unit">packs · min. 5</div>
-            </div>
-            <div class="item-qty-wrap">
-              <div class="item-qty">8</div>
-              <div class="item-status status-ok">Good</div>
-            </div>
-          </div>
-        </div>
+      <div class="login-brand" style="margin-bottom:24px">
+        <h1>JOIN THE TEAM</h1>
+        <p>Dover Cottage · Nuwara Eliya</p>
       </div>
 
-      <div class="fab">+</div>
+      <div class="login-card">
+        <h2>Create your account</h2>
 
-      <div class="bottom-nav">
-        <div class="nav-item">
-          <div class="nav-icon">📊</div>
-          <div class="nav-label">Dashboard</div>
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="signup-name" class="form-input"
+                 placeholder="e.g. Kasun Perera" autocomplete="name">
         </div>
-        <div class="nav-item active">
-          <div class="nav-icon">📦</div>
-          <div class="nav-label">Inventory</div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="signup-email" class="form-input"
+                 placeholder="your@email.com" autocomplete="email">
         </div>
-        <div class="nav-item">
-          <div class="nav-icon">🧾</div>
-          <div class="nav-label">Expenses</div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="signup-password" class="form-input"
+                 placeholder="At least 6 characters" autocomplete="new-password">
+          <div class="field-error" id="signup-error"></div>
         </div>
+
+        <button class="btn-primary" onclick="doSignup()">Create Account</button>
+        <button class="btn-outline" onclick="switchTo('screen-login')">Back to Sign In</button>
       </div>
+
     </div>
   </div>
 
-
-  <!-- ═══════════════════════════════════════
-       SCREEN 2B: INVENTORY — PROPERTY ITEMS
-  ═══════════════════════════════════════ -->
-  <div class="phone-wrap">
-    <div class="screen-label">3 — Property Items (Owner Only)</div>
-    <div class="phone">
-      <div class="status-bar">
-        <span>9:41</span>
-        <span>●●●  WiFi  🔋</span>
+  <!-- ══════════════ PLACEHOLDER (Step 3 replaces this) ══════════════ -->
+  <div id="screen-home" class="screen">
+    <div class="placeholder-screen">
+      <div class="placeholder-logo">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="hTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
+            <path id="hBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
+          </defs>
+          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+          <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
+            <textPath href="#hTopArc" startOffset="18%">DOVER</textPath>
+          </text>
+          <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
+            <textPath href="#hBotArc" startOffset="11%">COTTAGE</textPath>
+          </text>
+          <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
+          <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
+        </svg>
       </div>
-
-      <div class="screen-content">
-        <div class="detail-header" style="flex-direction:column;align-items:stretch;gap:0">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-            <div class="back-btn">‹</div>
-            <div class="detail-header-text">
-              <div class="detail-title">📦 Inventory</div>
-              <div class="detail-sub">Log breakages freely · Only owner edits counts</div>
-            </div>
-            <div class="dc-logo-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/><text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text><text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text></svg></div>
-          </div>
-          <div class="inv-tabs">
-            <div class="inv-tab">Consumable Supplies</div>
-            <div class="inv-tab active">Property Items</div>
-          </div>
-        </div>
-
-        <div style="padding:10px 16px 4px;display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:11px;color:var(--muted);font-weight:600">Tap to report a broken item</div>
-          <div class="owner-badge">🔒 Add items: Owner only</div>
-        </div>
-
-        <div class="item-list" style="padding-top:8px">
-          <div class="prop-row">
-            <div class="prop-top">
-              <div class="item-icon">🛏</div>
-              <div class="prop-info">
-                <div class="prop-name">Bed Sheets</div>
-                <div class="prop-counts">Started with 16 · No breakages</div>
-              </div>
-              <div class="prop-right">
-                <div class="prop-qty">16</div>
-                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
-              </div>
-            </div>
-            <div class="breakage-btn">⚠ Log Breakage</div>
-          </div>
-
-          <div class="prop-row has-breakage">
-            <div class="prop-top">
-              <div class="item-icon">🍽</div>
-              <div class="prop-info">
-                <div class="prop-name">Dinner Plates</div>
-                <div class="prop-counts">Started with 24 · <span>2 broken</span></div>
-              </div>
-              <div class="prop-right">
-                <div class="prop-qty damaged">22</div>
-                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
-              </div>
-            </div>
-            <div class="breakage-btn">⚠ Log Breakage</div>
-          </div>
-
-          <div class="prop-row has-breakage">
-            <div class="prop-top">
-              <div class="item-icon">🥂</div>
-              <div class="prop-info">
-                <div class="prop-name">Glasses</div>
-                <div class="prop-counts">Started with 20 · <span>1 broken</span></div>
-              </div>
-              <div class="prop-right">
-                <div class="prop-qty damaged">19</div>
-                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
-              </div>
-            </div>
-            <div class="breakage-btn">⚠ Log Breakage</div>
-          </div>
-
-          <div class="prop-row">
-            <div class="prop-top">
-              <div class="item-icon">🍴</div>
-              <div class="prop-info">
-                <div class="prop-name">Cutlery Sets</div>
-                <div class="prop-counts">Started with 16 · No breakages</div>
-              </div>
-              <div class="prop-right">
-                <div class="prop-qty">16</div>
-                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
-              </div>
-            </div>
-            <div class="breakage-btn">⚠ Log Breakage</div>
-          </div>
-
-          <div class="prop-row">
-            <div class="prop-top">
-              <div class="item-icon">🛁</div>
-              <div class="prop-info">
-                <div class="prop-name">Bath Towels</div>
-                <div class="prop-counts">Started with 20 · No breakages</div>
-              </div>
-              <div class="prop-right">
-                <div class="prop-qty">20</div>
-                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
-              </div>
-            </div>
-            <div class="breakage-btn">⚠ Log Breakage</div>
-          </div>
-
-          <div class="prop-row">
-            <div class="prop-top">
-              <div class="item-icon">🛋</div>
-              <div class="prop-info">
-                <div class="prop-name">Pillowcases</div>
-                <div class="prop-counts">Started with 32 · No breakages</div>
-              </div>
-              <div class="prop-right">
-                <div class="prop-qty">32</div>
-                <div style="font-size:9px;color:var(--muted);font-weight:600">🔒 edit</div>
-              </div>
-            </div>
-            <div class="breakage-btn">⚠ Log Breakage</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bottom-nav">
-        <div class="nav-item">
-          <div class="nav-icon">📊</div>
-          <div class="nav-label">Dashboard</div>
-        </div>
-        <div class="nav-item active">
-          <div class="nav-icon">📦</div>
-          <div class="nav-label">Inventory</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-icon">🧾</div>
-          <div class="nav-label">Expenses</div>
-        </div>
-      </div>
+      <h2>You're in, <span class="placeholder-name" id="home-name">—</span>!</h2>
+      <p>Login is working. The dashboard is coming in the next step.</p>
+      <button class="btn-signout" onclick="doSignout()">Sign Out</button>
     </div>
   </div>
 
+  <!-- Overlays -->
+  <div id="loading" class="loading-overlay hidden"><div class="spinner"></div></div>
+  <div id="toast"   class="toast hidden"></div>
 
-  <!-- ═══════════════════════════════════════
-       SCREEN 4: LOG BREAKAGE FORM
-  ═══════════════════════════════════════ -->
-  <div class="phone-wrap">
-    <div class="screen-label">4 — Log a Breakage</div>
-    <div class="phone">
-      <div class="status-bar">
-        <span>9:41</span>
-        <span>●●●  WiFi  🔋</span>
-      </div>
+</div>
 
-      <div class="screen-content">
-        <div class="form-header" style="background:#991B1B">
-          <div class="back-btn">‹</div>
-          <div style="flex:1">
-            <div class="form-title">Log a Breakage</div>
-            <div style="color:rgba(255,255,255,0.55);font-size:12px;margin-top:2px">Record what broke and who reported it</div>
-          </div>
-          <div class="dc-logo-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/><text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text><text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text></svg></div>
-        </div>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-        <div class="form-body">
+// ── Supabase ────────────────────────────────────────────────────────────
+const db = createClient(
+  'https://zcclpkmgsltjzgpuhrep.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjY2xwa21nc2x0anpncHVocmVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzkyMDYsImV4cCI6MjA5MDExNTIwNn0.pSkoa1_jKdSWh8O83a5F8bbTme4v9QWjHWnTbpDqY_o'
+);
 
-          <!-- Item pre-filled from tapping -->
-          <div class="form-group">
-            <div class="form-label">Item</div>
-            <div class="breakage-item-banner">
-              <div class="bi-icon">🍽</div>
-              <div class="bi-info">
-                <div class="bi-name">Dinner Plates</div>
-                <div class="bi-count">22 remaining · 2 already broken</div>
-              </div>
-            </div>
-          </div>
+// ── Helpers ─────────────────────────────────────────────────────────────
+const $  = id => document.getElementById(id);
+const loading = { show: () => $('loading').classList.remove('hidden'), hide: () => $('loading').classList.add('hidden') };
 
-          <!-- How many broken -->
-          <div class="form-group">
-            <div class="form-label">How many broke?</div>
-            <div class="stepper">
-              <div class="stepper-btn">−</div>
-              <div class="stepper-val">1</div>
-              <div class="stepper-btn">+</div>
-            </div>
-          </div>
+function showToast(msg, type = '') {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = `toast ${type}`;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.add('hidden'), 3500);
+}
 
-          <!-- What happened -->
-          <div class="form-group">
-            <div class="form-label">What happened?</div>
-            <div class="text-field" style="min-height:56px">Dropped while clearing table after checkout</div>
-          </div>
+function showError(id, msg) {
+  const el = $(id);
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+function clearError(id) { $(id).classList.remove('visible'); }
 
-          <!-- Logged by -->
-          <div class="form-group">
-            <div class="form-label">Reported by</div>
-            <div class="people-row">
-              <div class="person-chip">👩 Maria</div>
-              <div class="person-chip selected">👨 James</div>
-              <div class="person-chip">🧑 Saman</div>
-            </div>
-          </div>
+// ── Navigation ───────────────────────────────────────────────────────────
+window.switchTo = function(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(screenId).classList.add('active');
+};
 
-          <!-- Date -->
-          <div class="form-group">
-            <div class="form-label">Date</div>
-            <div class="select-field">
-              <span class="select-val">📅 Today — 25 March 2026</span>
-              <span class="select-arrow">›</span>
-            </div>
-          </div>
+// ── Login ────────────────────────────────────────────────────────────────
+window.doLogin = async function() {
+  const email    = $('login-email').value.trim();
+  const password = $('login-password').value;
+  clearError('login-error');
 
-        </div>
+  if (!email || !password) {
+    showError('login-error', 'Please enter your email and password.');
+    return;
+  }
 
-        <div class="submit-btn" style="background:#991B1B;box-shadow:0 6px 20px rgba(153,27,27,0.35)">Save Breakage →</div>
-      </div>
-    </div>
-  </div>
+  loading.show();
+  const { error } = await db.auth.signInWithPassword({ email, password });
+  loading.hide();
 
+  if (error) {
+    showError('login-error', 'Incorrect email or password. Please try again.');
+  }
+  // success → handled by onAuthStateChange below
+};
 
-  <!-- ═══════════════════════════════════════
-       SCREEN 5: EXPENSE LOG
-  ═══════════════════════════════════════ -->
-  <div class="phone-wrap">
-    <div class="screen-label">5 — Expense Log</div>
-    <div class="phone">
-      <div class="status-bar">
-        <span>9:41</span>
-        <span>●●●  WiFi  🔋</span>
-      </div>
+// ── Sign Up ──────────────────────────────────────────────────────────────
+window.doSignup = async function() {
+  const name     = $('signup-name').value.trim();
+  const email    = $('signup-email').value.trim();
+  const password = $('signup-password').value;
+  clearError('signup-error');
 
-      <div class="screen-content">
-        <div class="exp-header">
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <div>
-              <div class="exp-title">Expenses</div>
-              <div class="exp-sub">Track spending · View summaries</div>
-            </div>
-            <div class="dc-logo-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/><text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text><text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text></svg></div>
-          </div>
-        </div>
+  if (!name)              { showError('signup-error', 'Please enter your name.');           return; }
+  if (!email)             { showError('signup-error', 'Please enter your email.');          return; }
+  if (password.length < 6){ showError('signup-error', 'Password must be at least 6 characters.'); return; }
 
-        <!-- Summary cards -->
-        <div class="exp-summary-cards">
-          <div class="exp-sum-card">
-            <div class="exp-sum-amount">Rs. 42,500</div>
-            <div class="exp-sum-label">March Total</div>
-          </div>
-          <div class="exp-sum-card">
-            <div class="exp-sum-amount" style="color:var(--gold)">Rs. 18,200</div>
-            <div class="exp-sum-label">Cleaning</div>
-          </div>
-          <div class="exp-sum-card">
-            <div class="exp-sum-amount" style="color:var(--navy)">3</div>
-            <div class="exp-sum-label">Entries</div>
-          </div>
-        </div>
+  loading.show();
 
-        <!-- Month tabs -->
-        <div class="month-tabs">
-          <div class="tab">Jan</div>
-          <div class="tab">Feb</div>
-          <div class="tab active">Mar</div>
-          <div class="tab">Apr</div>
-        </div>
+  const { data, error } = await db.auth.signUp({ email, password });
 
-        <div class="section-header" style="padding-top:4px">
-          <div class="section-title">Recent Expenses</div>
-        </div>
+  if (error) {
+    loading.hide();
+    showError('signup-error', error.message || 'Could not create account. Please try again.');
+    return;
+  }
 
-        <div class="exp-list">
-          <div class="exp-item">
-            <div class="exp-cat-dot dot-clean">🧹</div>
-            <div class="exp-info">
-              <div class="exp-name">Cleaning Supplies Run</div>
-              <div class="exp-meta">Maria · Mar 22 · Cleaning</div>
-            </div>
-            <div class="exp-right">
-              <div class="exp-amount">Rs. 18,200</div>
-              <div class="receipt-chip">📷 Receipt</div>
-            </div>
-          </div>
+  // Create profile record
+  const { error: profileErr } = await db.from('profiles').insert({
+    id:   data.user.id,
+    name: name,
+    role: 'team'   // owner role set manually via Supabase dashboard
+  });
 
-          <div class="exp-item">
-            <div class="exp-cat-dot dot-kitchen">☕</div>
-            <div class="exp-info">
-              <div class="exp-name">Coffee & Tea Restock</div>
-              <div class="exp-meta">James · Mar 18 · Kitchen</div>
-            </div>
-            <div class="exp-right">
-              <div class="exp-amount">Rs. 5,400</div>
-              <div class="receipt-chip">📷 Receipt</div>
-            </div>
-          </div>
+  loading.hide();
 
-          <div class="exp-item">
-            <div class="exp-cat-dot dot-linen">🛏</div>
-            <div class="exp-info">
-              <div class="exp-name">Replacement Pillows ×4</div>
-              <div class="exp-meta">Maria · Mar 10 · Linens</div>
-            </div>
-            <div class="exp-right">
-              <div class="exp-amount">Rs. 12,800</div>
-              <div class="receipt-chip">📷 Receipt</div>
-            </div>
-          </div>
-        </div>
-      </div>
+  if (profileErr) {
+    showError('signup-error', 'Account created but setup incomplete. Please contact the owner.');
+    return;
+  }
 
-      <!-- FAB -->
-      <div class="fab">+</div>
+  showToast('Account created! Signing you in…', 'success');
+};
 
-      <div class="bottom-nav">
-        <div class="nav-item">
-          <div class="nav-icon">📊</div>
-          <div class="nav-label">Dashboard</div>
-        </div>
-        <div class="nav-item">
-          <div class="nav-icon">📦</div>
-          <div class="nav-label">Inventory</div>
-        </div>
-        <div class="nav-item active">
-          <div class="nav-icon">🧾</div>
-          <div class="nav-label">Expenses</div>
-        </div>
-      </div>
-    </div>
-  </div>
+// ── Sign Out ─────────────────────────────────────────────────────────────
+window.doSignout = async function() {
+  await db.auth.signOut();
+};
 
-
-  <!-- ═══════════════════════════════════════
-       SCREEN 6: LOG EXPENSE FORM (ENHANCED)
-  ═══════════════════════════════════════ -->
-  <div class="phone-wrap">
-    <div class="screen-label">6 — Log an Expense</div>
-    <div class="phone">
-      <div class="status-bar">
-        <span>9:41</span>
-        <span>●●●  WiFi  🔋</span>
-      </div>
-
-      <div class="screen-content">
-        <div class="form-header">
-          <div class="back-btn">‹</div>
-          <div style="flex:1">
-            <div class="form-title">Log an Expense</div>
-            <div style="color:rgba(255,255,255,0.55);font-size:12px;margin-top:2px">Fill in the details · Snap the receipt</div>
-          </div>
-          <div class="dc-logo-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/><text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text><text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text></svg></div>
-        </div>
-
-        <div class="form-body">
-
-          <!-- Amount -->
-          <div class="form-group">
-            <div class="form-label">Amount Spent</div>
-            <div class="amount-input">
-              <div class="currency">Rs.</div>
-              <div class="amount-val">2,850</div>
-              <div class="cursor"></div>
-            </div>
-          </div>
-
-          <!-- Category grid -->
-          <div class="form-group">
-            <div class="form-label">Category</div>
-            <div class="cat-grid">
-              <div class="cat-option selected">
-                <div class="cat-option-icon">🧹</div>
-                <div class="cat-option-label">Cleaning</div>
-              </div>
-              <div class="cat-option">
-                <div class="cat-option-icon">🛏</div>
-                <div class="cat-option-label">Linens</div>
-              </div>
-              <div class="cat-option">
-                <div class="cat-option-icon">☕</div>
-                <div class="cat-option-label">Kitchen</div>
-              </div>
-              <div class="cat-option">
-                <div class="cat-option-icon">🧴</div>
-                <div class="cat-option-label">Toiletries</div>
-              </div>
-              <div class="cat-option">
-                <div class="cat-option-icon">🔧</div>
-                <div class="cat-option-label">Maintenance</div>
-              </div>
-              <div class="cat-option">
-                <div class="cat-option-icon">📦</div>
-                <div class="cat-option-label">Other</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Description -->
-          <div class="form-group">
-            <div class="form-label">What was it for?</div>
-            <div class="text-field" style="min-height:52px">Dishwasher tablets and floor cleaner</div>
-          </div>
-
-          <!-- Logged by -->
-          <div class="form-group">
-            <div class="form-label">Logged by</div>
-            <div class="people-row">
-              <div class="person-chip selected">👩 Maria</div>
-              <div class="person-chip">👨 James</div>
-              <div class="person-chip">🧑 Saman</div>
-            </div>
-          </div>
-
-          <!-- Date -->
-          <div class="form-group">
-            <div class="form-label">Date</div>
-            <div class="select-field">
-              <span class="select-val">📅 Today — 25 March 2026</span>
-              <span class="select-arrow">›</span>
-            </div>
-          </div>
-
-          <!-- Receipt Photo -->
-          <div class="form-group">
-            <div class="form-label">Receipt Photo</div>
-            <div class="receipt-actions">
-              <div class="receipt-action-btn">
-                <div class="receipt-action-icon">📷</div>
-                <div class="receipt-action-label">Take Photo</div>
-              </div>
-              <div class="receipt-action-btn">
-                <div class="receipt-action-icon">🖼</div>
-                <div class="receipt-action-label">Choose from Gallery</div>
-              </div>
-            </div>
-            <!-- Attached state — shown after a photo is taken -->
-            <div class="receipt-attached">
-              <div class="receipt-thumb">🧾</div>
-              <div class="receipt-attached-info">
-                <div class="receipt-attached-name">Receipt attached ✓</div>
-                <div class="receipt-attached-sub">Tap to view or retake</div>
-              </div>
-              <div class="receipt-attached-remove">×</div>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="submit-btn">Save Expense →</div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- end phone-row -->
-
+// ── Auth State ────────────────────────────────────────────────────────────
+db.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    const { data: profile } = await db
+      .from('profiles').select('name').eq('id', session.user.id).single();
+    $('home-name').textContent = profile?.name?.split(' ')[0] || 'there';
+    switchTo('screen-home');
+  } else {
+    switchTo('screen-login');
+  }
+});
+</script>
 </body>
 </html>
