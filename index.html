@@ -382,6 +382,39 @@
       cursor: pointer; white-space: nowrap;
     }
 
+    /* Amount field */
+    .amount-wrap   { position: relative; }
+    .amount-prefix {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 15px; font-weight: 600; color: var(--muted); pointer-events: none;
+    }
+    .form-input {
+      width: 100%; padding: 13px 14px; border: 1.5px solid var(--border);
+      border-radius: 11px; font-size: 16px; color: var(--text);
+      background: white; -webkit-appearance: none; font-family: inherit;
+    }
+    .form-input:focus { outline: none; border-color: var(--gold); }
+    .amount-input { padding-left: 46px !important; }
+
+    /* Category grid */
+    .cat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .cat-btn {
+      padding: 12px 6px; border-radius: 12px; text-align: center;
+      border: 1.5px solid var(--border); background: white; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cat-btn.active { border-color: var(--gold); background: #FEF3C7; }
+    .cat-btn-icon  { font-size: 22px; margin-bottom: 4px; }
+    .cat-btn-label { font-size: 11px; font-weight: 600; color: var(--text); }
+
+    /* Receipt area */
+    .receipt-area {
+      border: 2px dashed var(--border); border-radius: 14px;
+      padding: 28px 20px; text-align: center; cursor: pointer;
+      background: white; transition: border-color 0.2s;
+    }
+    .receipt-area:active { border-color: var(--gold); }
+
     /* Breakage item card */
     .breakage-item-card {
       background: #FEE2E2; border-radius: 13px; padding: 14px 16px;
@@ -870,6 +903,82 @@
       <button class="exp-csv-btn" onclick="downloadCSV()">⬇️ Download as CSV</button>
     </div>
 
+  </div>
+
+  <!-- ══════════════ LOG EXPENSE ══════════════ -->
+  <div id="screen-log-expense" class="screen">
+
+    <div class="form-header">
+      <button class="back-btn" onclick="switchTo('screen-expenses')">‹</button>
+      <div class="form-header-text">
+        <div class="form-header-title">Log an Expense</div>
+        <div class="form-header-sub">Fill in the details · Snap the receipt</div>
+      </div>
+      <div class="dc-logo-sm">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
+          <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
+          <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
+          <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="form-body">
+
+      <div class="form-field">
+        <label class="form-label">Amount</label>
+        <div class="amount-wrap">
+          <span class="amount-prefix">Rs.</span>
+          <input type="number" id="exp-amount" class="form-input amount-input"
+                 placeholder="0.00" inputmode="decimal" step="0.01" min="0">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Category</label>
+        <div class="cat-grid">
+          <div class="cat-btn active" data-cat="Groceries"  onclick="selectCat(this)"><div class="cat-btn-icon">🛒</div><div class="cat-btn-label">Groceries</div></div>
+          <div class="cat-btn"       data-cat="Cleaning"   onclick="selectCat(this)"><div class="cat-btn-icon">🧹</div><div class="cat-btn-label">Cleaning</div></div>
+          <div class="cat-btn"       data-cat="Toiletries" onclick="selectCat(this)"><div class="cat-btn-icon">🧴</div><div class="cat-btn-label">Toiletries</div></div>
+          <div class="cat-btn"       data-cat="Repairs"    onclick="selectCat(this)"><div class="cat-btn-icon">🔧</div><div class="cat-btn-label">Repairs</div></div>
+          <div class="cat-btn"       data-cat="Laundry"    onclick="selectCat(this)"><div class="cat-btn-icon">👕</div><div class="cat-btn-label">Laundry</div></div>
+          <div class="cat-btn"       data-cat="Other"      onclick="selectCat(this)"><div class="cat-btn-icon">📦</div><div class="cat-btn-label">Other</div></div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Description</label>
+        <textarea id="exp-desc" class="form-textarea" placeholder="What was this expense for?"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Date</label>
+        <input type="date" id="exp-date" class="form-input">
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Logged by</label>
+        <div class="chips-row" id="exp-reporter"></div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Receipt Photo <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+        <div class="receipt-area" onclick="document.getElementById('receipt-file').click()">
+          <div id="receipt-placeholder">
+            <div style="font-size:32px;margin-bottom:8px">📷</div>
+            <div style="font-size:14px;font-weight:600;color:var(--muted)">Tap to take a photo</div>
+            <div style="font-size:12px;color:var(--border);margin-top:4px">or pick from your gallery</div>
+          </div>
+          <img id="receipt-preview" style="display:none;max-width:100%;max-height:200px;border-radius:10px;object-fit:contain">
+        </div>
+        <input type="file" id="receipt-file" accept="image/*" capture="environment"
+               style="display:none" onchange="previewReceipt(this)">
+      </div>
+
+      <button class="btn-submit" onclick="submitExpense()">Save Expense</button>
+
+    </div>
   </div>
 
   <!-- ══════════════ LOG BREAKAGE ══════════════ -->
@@ -1394,7 +1503,103 @@ window.downloadCSV = function() {
 };
 
 // placeholder — replaced in Step 7
-window.openLogExpense = function() { showToast('Expense form coming in the next step!'); };
+// ── Log Expense form ───────────────────────────────────────────────────────
+let selectedCat     = 'Groceries';
+let expReporter     = null;
+let receiptFile     = null;
+
+window.openLogExpense = async function() {
+  // Reset form
+  $('exp-amount').value = '';
+  $('exp-desc').value   = '';
+  $('exp-date').value   = todayISO();
+  receiptFile           = null;
+  $('receipt-preview').style.display     = 'none';
+  $('receipt-placeholder').style.display = 'block';
+
+  // Reset category to Groceries
+  selectedCat = 'Groceries';
+  document.querySelectorAll('.cat-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.cat === 'Groceries'));
+
+  // Load reporter chips
+  await loadProfiles();
+  expReporter = currentProfile?.id || null;
+  $('exp-reporter').innerHTML = allProfiles.map(p => `
+    <div class="chip ${p.id === expReporter ? 'active' : ''}"
+         onclick="selectExpReporter('${p.id}', this)">${p.name}</div>
+  `).join('');
+
+  switchTo('screen-log-expense');
+};
+
+window.selectCat = function(el) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  selectedCat = el.dataset.cat;
+};
+
+window.selectExpReporter = function(id, el) {
+  expReporter = id;
+  $('exp-reporter').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+};
+
+window.previewReceipt = function(input) {
+  if (!input.files || !input.files[0]) return;
+  receiptFile = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    $('receipt-preview').src            = e.target.result;
+    $('receipt-preview').style.display  = 'block';
+    $('receipt-placeholder').style.display = 'none';
+  };
+  reader.readAsDataURL(receiptFile);
+};
+
+window.submitExpense = async function() {
+  const amount = parseFloat($('exp-amount').value);
+  const desc   = $('exp-desc').value.trim();
+  const date   = $('exp-date').value;
+
+  if (!amount || amount <= 0) { showToast('Please enter a valid amount.', 'error');  return; }
+  if (!desc)                  { showToast('Please add a description.',    'error');  return; }
+  if (!date)                  { showToast('Please choose a date.',        'error');  return; }
+
+  loading.show();
+
+  // Upload receipt if one was chosen
+  let receiptUrl = null;
+  if (receiptFile) {
+    const ext  = receiptFile.name.split('.').pop() || 'jpg';
+    const path = `receipts/${Date.now()}.${ext}`;
+    const { error: upErr } = await db.storage.from('receipts').upload(path, receiptFile);
+    if (!upErr) {
+      const { data: urlData } = db.storage.from('receipts').getPublicUrl(path);
+      receiptUrl = urlData.publicUrl;
+    }
+  }
+
+  const { error } = await db.from('expenses').insert({
+    amount,
+    category:     selectedCat,
+    description:  desc,
+    logged_by:    expReporter || currentProfile?.id,
+    expense_date: date,
+    receipt_url:  receiptUrl
+  });
+
+  loading.hide();
+
+  if (error) { showToast('Could not save expense. Please try again.', 'error'); return; }
+  showToast('Expense saved!', 'success');
+  switchTo('screen-expenses');
+  await loadExpenses();
+};
+
+function todayISO() {
+  return new Date().toISOString().split('T')[0];
+}
 
 // ── Always start on the login screen ─────────────────────────────────────
 switchTo('screen-login');
