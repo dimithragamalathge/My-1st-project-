@@ -88,6 +88,89 @@
     .toast.success { background: var(--green); }
 
     /* ══════════════════════════════════════
+       DASHBOARD
+    ══════════════════════════════════════ */
+    .dash-header {
+      background: var(--navy);
+      padding: 20px 20px 24px;
+      flex-shrink: 0;
+    }
+    .dash-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .dash-brand { display: flex; align-items: center; gap: 11px; }
+    .dash-logo  { width: 42px; height: 42px; color: var(--gold); flex-shrink: 0; }
+    .dash-logo svg { width: 100%; height: 100%; }
+    .dash-brand-name { color: white; font-size: 14px; font-weight: 700; letter-spacing: 1.5px; }
+    .dash-brand-loc  { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 1px; }
+    .dash-signout-btn {
+      background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+      border: none; border-radius: 9px; padding: 7px 12px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+
+    .dash-greeting { margin-bottom: 16px; }
+    .dash-greeting-text { color: white; font-size: 22px; font-weight: 700; }
+    .dash-date { color: rgba(255,255,255,0.45); font-size: 13px; margin-top: 2px; }
+
+    .dash-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;
+    }
+    .dash-stat-card {
+      background: rgba(255,255,255,0.1); border-radius: 14px; padding: 14px;
+    }
+    .dash-stat-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
+    .dash-stat-value { font-size: 28px; font-weight: 700; color: white; margin: 4px 0 2px; }
+    .dash-stat-value.warn { color: #FCD34D; }
+    .dash-stat-sub   { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+    .dash-spend-bar {
+      background: rgba(255,255,255,0.1); border-radius: 14px; padding: 14px;
+    }
+    .dash-spend-label  { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .dash-spend-amount { font-size: 26px; font-weight: 700; color: white; }
+    .dash-spend-sub    { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 3px; }
+
+    .dash-body { padding: 16px 16px 40px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+
+    .dash-alert {
+      background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 14px; padding: 14px;
+    }
+    .dash-alert-title { font-size: 13px; font-weight: 700; color: #92400E; margin-bottom: 8px; }
+    .dash-alert-item  { font-size: 13px; color: #78350F; padding: 2px 0; }
+
+    .dash-nav-card {
+      background: white; border-radius: 16px; padding: 16px 18px;
+      display: flex; align-items: center; gap: 14px;
+      border: 1.5px solid var(--border);
+      box-shadow: 0 2px 8px rgba(59,35,20,0.06);
+      cursor: pointer; transition: transform 0.15s;
+    }
+    .dash-nav-card:active { transform: scale(0.98); }
+    .dash-nav-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .inv-icon { background: linear-gradient(135deg,#F5E6C8,#EDD9A3); }
+    .exp-icon { background: linear-gradient(135deg,#D4EDD4,#B8D9B8); }
+    .dash-nav-text { flex: 1; }
+    .dash-nav-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .dash-nav-sub   { font-size: 12px; color: var(--muted); }
+    .dash-nav-arrow { font-size: 22px; color: var(--muted); }
+
+    .dash-section-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .dash-recent-card   { background: white; border-radius: 14px; border: 1.5px solid var(--border); overflow: hidden; }
+    .dash-recent-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 13px 14px; border-bottom: 1px solid var(--border);
+    }
+    .dash-recent-item:last-child { border-bottom: none; }
+    .dash-recent-desc { font-size: 13px; font-weight: 600; color: var(--text); }
+    .dash-recent-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .dash-recent-amt  { font-size: 14px; font-weight: 700; color: var(--navy); flex-shrink: 0; }
+
+    /* ══════════════════════════════════════
        LOGIN SCREEN
     ══════════════════════════════════════ */
     .login-bg {
@@ -382,30 +465,102 @@
     </div>
   </div>
 
-  <!-- ══════════════ PLACEHOLDER (Step 3 replaces this) ══════════════ -->
+  <!-- ══════════════ DASHBOARD ══════════════ -->
   <div id="screen-home" class="screen">
-    <div class="placeholder-screen">
-      <div class="placeholder-logo">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <path id="hTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
-            <path id="hBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
-          </defs>
-          <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
-          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
-          <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
-            <textPath href="#hTopArc" startOffset="18%">DOVER</textPath>
-          </text>
-          <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
-            <textPath href="#hBotArc" startOffset="11%">COTTAGE</textPath>
-          </text>
-          <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
-          <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
-        </svg>
+
+    <!-- Header -->
+    <div class="dash-header">
+      <div class="dash-topbar">
+        <div class="dash-brand">
+          <div class="dash-logo">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <path id="dTopArc" d="M 9,50 A 41,41 0 0,1 91,50"/>
+                <path id="dBotArc" d="M 9,50 A 41,41 0 0,0 91,50"/>
+              </defs>
+              <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+              <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+              <circle cx="13" cy="50" r="2" fill="currentColor" opacity="0.8"/>
+              <circle cx="87" cy="50" r="2" fill="currentColor" opacity="0.8"/>
+              <text font-family="Georgia,serif" font-size="9.5" fill="currentColor" opacity="0.9" letter-spacing="4.5">
+                <textPath href="#dTopArc" startOffset="18%">DOVER</textPath>
+              </text>
+              <text font-family="Georgia,serif" font-size="9" fill="currentColor" opacity="0.9" letter-spacing="2.8">
+                <textPath href="#dBotArc" startOffset="11%">COTTAGE</textPath>
+              </text>
+              <text x="43" y="55" font-family="Georgia,serif" font-size="26" font-style="italic" fill="currentColor" opacity="0.95">D</text>
+              <text x="55" y="64" font-family="Georgia,serif" font-size="22" font-style="italic" fill="currentColor" opacity="0.95">C</text>
+            </svg>
+          </div>
+          <div class="dash-brand-text">
+            <div class="dash-brand-name">DOVER COTTAGE</div>
+            <div class="dash-brand-loc">Nuwara Eliya, Sri Lanka</div>
+          </div>
+        </div>
+        <button class="dash-signout-btn" onclick="doSignout()">Sign Out</button>
       </div>
-      <h2>You're in, <span class="placeholder-name" id="home-name">—</span>!</h2>
-      <p>Login is working. The dashboard is coming in the next step.</p>
-      <button class="btn-signout" onclick="doSignout()">Sign Out</button>
+
+      <div class="dash-greeting">
+        <div class="dash-greeting-text" id="dash-greeting">Good morning</div>
+        <div class="dash-date" id="dash-date">—</div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="dash-stats">
+        <div class="dash-stat-card">
+          <div class="dash-stat-label">Low Stock</div>
+          <div class="dash-stat-value warn" id="dash-low-count">—</div>
+          <div class="dash-stat-sub">items need restocking</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dash-stat-label">Total Items</div>
+          <div class="dash-stat-value" id="dash-total-count">—</div>
+          <div class="dash-stat-sub">in inventory</div>
+        </div>
+      </div>
+
+      <!-- Monthly spend -->
+      <div class="dash-spend-bar">
+        <div class="dash-spend-label" id="dash-month-label">This Month's Spending</div>
+        <div class="dash-spend-amount" id="dash-month-total">Rs. —</div>
+        <div class="dash-spend-sub" id="dash-month-sub">— expenses logged</div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="dash-body">
+
+      <!-- Low stock alert -->
+      <div class="dash-alert" id="dash-alert" style="display:none">
+        <div class="dash-alert-title">⚠️ Running Low</div>
+        <div id="dash-alert-list"></div>
+      </div>
+
+      <!-- Nav cards -->
+      <div class="dash-nav-card" onclick="goToInventory()">
+        <div class="dash-nav-icon inv-icon">📦</div>
+        <div class="dash-nav-text">
+          <div class="dash-nav-title">Inventory</div>
+          <div class="dash-nav-sub">Check and update stock levels</div>
+        </div>
+        <div class="dash-nav-arrow">›</div>
+      </div>
+
+      <div class="dash-nav-card" onclick="goToExpenses()">
+        <div class="dash-nav-icon exp-icon">💳</div>
+        <div class="dash-nav-text">
+          <div class="dash-nav-title">Expenses</div>
+          <div class="dash-nav-sub">Log and view all spending</div>
+        </div>
+        <div class="dash-nav-arrow">›</div>
+      </div>
+
+      <!-- Recent expenses -->
+      <div id="dash-recent-wrap" style="display:none">
+        <div class="dash-section-title">Recent Expenses</div>
+        <div class="dash-recent-card" id="dash-recent-list"></div>
+      </div>
+
     </div>
   </div>
 
@@ -530,11 +685,75 @@ window.doSignout = async function() {
   await db.auth.signOut();
 };
 
+// ── Dashboard ─────────────────────────────────────────────────────────────
+async function loadDashboard(profile) {
+  // Greeting
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  $('dash-greeting').textContent = `${greet}, ${profile.name.split(' ')[0]}`;
+  $('dash-date').textContent = new Date().toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  // Inventory stats
+  const { data: items } = await db.from('inventory_items').select('id,quantity,min_threshold,name,unit');
+  const total = items?.length || 0;
+  const lowItems = (items || []).filter(i => i.quantity <= i.min_threshold);
+  $('dash-total-count').textContent = total;
+  $('dash-low-count').textContent   = lowItems.length;
+
+  if (lowItems.length > 0) {
+    $('dash-alert').style.display = 'block';
+    $('dash-alert-list').innerHTML = lowItems.slice(0, 5).map(i =>
+      `<div class="dash-alert-item">• ${i.name} — ${i.quantity} ${i.unit} left</div>`
+    ).join('') + (lowItems.length > 5
+      ? `<div class="dash-alert-item" style="font-weight:700;margin-top:4px">+${lowItems.length - 5} more items</div>`
+      : '');
+  }
+
+  // This month's spending
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  const monthName  = now.toLocaleDateString('en-GB', { month:'long', year:'numeric' });
+  const { data: monthExp } = await db.from('expenses').select('amount').gte('expense_date', monthStart);
+  const monthTotal = (monthExp || []).reduce((s, e) => s + Number(e.amount), 0);
+  $('dash-month-label').textContent = monthName;
+  $('dash-month-total').textContent = fmtCurrency(monthTotal);
+  $('dash-month-sub').textContent   = `${(monthExp || []).length} expense${(monthExp || []).length !== 1 ? 's' : ''} this month`;
+
+  // Recent expenses
+  const { data: recent } = await db.from('expenses')
+    .select('amount, description, category, expense_date, profiles(name)')
+    .order('created_at', { ascending: false }).limit(3);
+  if (recent && recent.length > 0) {
+    $('dash-recent-wrap').style.display = 'block';
+    $('dash-recent-list').innerHTML = recent.map(e => `
+      <div class="dash-recent-item">
+        <div>
+          <div class="dash-recent-desc">${e.description}</div>
+          <div class="dash-recent-meta">${e.category} · ${e.profiles?.name || '—'} · ${fmtDate(e.expense_date)}</div>
+        </div>
+        <div class="dash-recent-amt">${fmtCurrency(e.amount)}</div>
+      </div>`).join('');
+  }
+}
+
+function fmtCurrency(n) {
+  return 'Rs. ' + Number(n).toLocaleString('en-LK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+}
+
+// Placeholders for next steps (wired to nav cards)
+window.goToInventory = function() { showToast('Inventory coming in the next step!'); };
+window.goToExpenses  = function() { showToast('Expenses coming soon!'); };
+
 // ── Auth State ────────────────────────────────────────────────────────────
 db.auth.onAuthStateChange(async (event, session) => {
   if (session?.user) {
+    loading.show();
     const profile = await ensureProfile(session.user);
-    $('home-name').textContent = profile?.name?.split(' ')[0] || 'there';
+    await loadDashboard(profile);
+    loading.hide();
     switchTo('screen-home');
   } else {
     switchTo('screen-login');
