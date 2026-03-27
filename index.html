@@ -257,6 +257,83 @@
     }
 
     /* ══════════════════════════════════════
+       EXPENSE LOG
+    ══════════════════════════════════════ */
+    .exp-header {
+      background: var(--navy); padding: 20px 20px 22px;
+      flex-shrink: 0; position: sticky; top: 0; z-index: 10;
+    }
+    .exp-topbar {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+    }
+    .exp-title { color: white; font-size: 22px; font-weight: 700; }
+    .exp-sub   { color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 2px; }
+    .exp-add-btn {
+      width: 40px; height: 40px; background: var(--gold); color: white;
+      border: none; border-radius: 12px; font-size: 24px; font-weight: 300;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .exp-summary-bar {
+      background: rgba(255,255,255,0.1); border-radius: 14px; padding: 14px;
+    }
+    .exp-summary-label  { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .exp-summary-amount { font-size: 26px; font-weight: 700; color: white; }
+    .exp-summary-sub    { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 3px; }
+
+    .exp-cat-breakdown { padding: 16px 16px 4px; }
+    .exp-cat-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 10px; }
+    .exp-cat-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 12px; background: white; border-radius: 10px;
+      margin-bottom: 6px; border: 1.5px solid var(--border);
+    }
+    .exp-cat-name   { font-size: 13px; color: var(--text); }
+    .exp-cat-amount { font-size: 14px; font-weight: 700; color: var(--navy); }
+
+    .exp-filters {
+      display: flex; gap: 8px; padding: 14px 16px 10px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .exp-filters::-webkit-scrollbar { display: none; }
+    .exp-filter {
+      padding: 7px 14px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+      border: 1.5px solid var(--border); background: white;
+      font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer;
+      transition: all 0.15s;
+    }
+    .exp-filter.active { background: var(--navy); border-color: var(--navy); color: white; }
+
+    .exp-list { padding: 4px 16px 16px; overflow-y: auto; flex: 1; }
+    .exp-empty { text-align: center; padding: 56px 20px; }
+
+    .exp-group-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--muted); margin: 12px 2px 8px;
+    }
+    .exp-item {
+      background: white; border-radius: 13px; padding: 13px 14px;
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 8px; border: 1.5px solid var(--border);
+    }
+    .exp-item-icon {
+      width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+      background: #F5E6C8;
+    }
+    .exp-item-info  { flex: 1; min-width: 0; }
+    .exp-item-desc  { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .exp-item-meta  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .exp-item-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .exp-item-amount { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .exp-receipt-thumb { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; cursor: pointer; }
+
+    .exp-csv-btn {
+      width: 100%; padding: 13px; background: white;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer;
+    }
+
+    /* ══════════════════════════════════════
        SHARED FORM ELEMENTS
     ══════════════════════════════════════ */
     .form-header {
@@ -738,6 +815,63 @@
 
   </div>
 
+  <!-- ══════════════ EXPENSE LOG ══════════════ -->
+  <div id="screen-expenses" class="screen">
+
+    <div class="exp-header">
+      <div class="exp-topbar">
+        <div>
+          <div class="exp-title">Expenses</div>
+          <div class="exp-sub">Track spending · View summaries</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="exp-add-btn" onclick="openLogExpense()">+</button>
+          <div class="dc-logo-sm">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1"/>
+              <circle cx="16" cy="16" r="10.5" fill="none" stroke="currentColor" stroke-width="0.7"/>
+              <text x="13" y="20" font-family="Georgia,serif" font-size="9" font-style="italic" fill="currentColor">D</text>
+              <text x="17.5" y="22.5" font-family="Georgia,serif" font-size="7.5" font-style="italic" fill="currentColor">C</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="exp-summary-bar">
+        <div class="exp-summary-label" id="exp-month-label">This Month</div>
+        <div class="exp-summary-amount" id="exp-month-total">Rs. 0.00</div>
+        <div class="exp-summary-sub" id="exp-month-sub">0 expenses</div>
+      </div>
+    </div>
+
+    <div class="exp-cat-breakdown" id="exp-cat-breakdown" style="display:none">
+      <div class="exp-cat-title">Breakdown by category</div>
+      <div id="exp-cat-list"></div>
+    </div>
+
+    <div class="exp-filters">
+      <button class="exp-filter active" onclick="filterExp('all',this)">All</button>
+      <button class="exp-filter" onclick="filterExp('Groceries',this)">🛒 Groceries</button>
+      <button class="exp-filter" onclick="filterExp('Cleaning',this)">🧹 Cleaning</button>
+      <button class="exp-filter" onclick="filterExp('Toiletries',this)">🧴 Toiletries</button>
+      <button class="exp-filter" onclick="filterExp('Repairs',this)">🔧 Repairs</button>
+      <button class="exp-filter" onclick="filterExp('Laundry',this)">👕 Laundry</button>
+      <button class="exp-filter" onclick="filterExp('Other',this)">📦 Other</button>
+    </div>
+
+    <div class="exp-list" id="exp-list">
+      <div class="exp-empty">
+        <div style="font-size:40px;margin-bottom:12px">💳</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px">No expenses yet</div>
+        <div style="font-size:13px;color:var(--muted)">Tap + to log your first expense</div>
+      </div>
+    </div>
+
+    <div id="exp-csv-wrap" style="display:none;padding:0 16px 32px">
+      <button class="exp-csv-btn" onclick="downloadCSV()">⬇️ Download as CSV</button>
+    </div>
+
+  </div>
+
   <!-- ══════════════ LOG BREAKAGE ══════════════ -->
   <div id="screen-breakage" class="screen">
 
@@ -1150,7 +1284,117 @@ window.submitBreakage = async function() {
   switchTo('screen-inventory');
 };
 
-window.goToExpenses = function() { showToast('Expenses coming soon!'); };
+// ── Expenses ──────────────────────────────────────────────────────────────
+let expensesData = [];
+const CAT_ICONS = { Groceries:'🛒', Cleaning:'🧹', Toiletries:'🧴', Repairs:'🔧', Laundry:'👕', Other:'📦' };
+
+window.goToExpenses = async function() {
+  switchTo('screen-expenses');
+  await loadExpenses();
+};
+
+async function loadExpenses() {
+  const { data, error } = await db
+    .from('expenses')
+    .select('*, profiles(name)')
+    .order('expense_date', { ascending: false })
+    .order('created_at',   { ascending: false });
+
+  if (error) { showToast('Could not load expenses.', 'error'); return; }
+  expensesData = data || [];
+  updateExpenseStats();
+  renderExpenses(expensesData);
+  $('exp-csv-wrap').style.display = expensesData.length > 0 ? 'block' : 'none';
+}
+
+function updateExpenseStats() {
+  const now        = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  const monthName  = now.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+  const thisMonth  = expensesData.filter(e => e.expense_date >= monthStart);
+  const total      = thisMonth.reduce((s, e) => s + Number(e.amount), 0);
+
+  $('exp-month-label').textContent = monthName;
+  $('exp-month-total').textContent = fmtCurrency(total);
+  $('exp-month-sub').textContent   = `${thisMonth.length} expense${thisMonth.length !== 1 ? 's' : ''} this month`;
+
+  // Category breakdown (this month only)
+  const cats = {};
+  thisMonth.forEach(e => { cats[e.category] = (cats[e.category] || 0) + Number(e.amount); });
+  const catEntries = Object.entries(cats).sort((a, b) => b[1] - a[1]);
+  if (catEntries.length > 0) {
+    $('exp-cat-breakdown').style.display = 'block';
+    $('exp-cat-list').innerHTML = catEntries.map(([cat, amt]) => `
+      <div class="exp-cat-row">
+        <div class="exp-cat-name">${CAT_ICONS[cat] || '📦'} ${cat}</div>
+        <div class="exp-cat-amount">${fmtCurrency(amt)}</div>
+      </div>`).join('');
+  } else {
+    $('exp-cat-breakdown').style.display = 'none';
+  }
+}
+
+function renderExpenses(items) {
+  if (items.length === 0) {
+    $('exp-list').innerHTML = `
+      <div class="exp-empty">
+        <div style="font-size:40px;margin-bottom:12px">💳</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px">No expenses here</div>
+        <div style="font-size:13px;color:var(--muted)">Tap + to log an expense</div>
+      </div>`;
+    return;
+  }
+
+  // Group by date
+  const groups = {};
+  items.forEach(e => { (groups[e.expense_date] = groups[e.expense_date] || []).push(e); });
+
+  $('exp-list').innerHTML = Object.entries(groups).map(([date, exps]) => `
+    <div class="exp-group-label">${fmtDateFull(date)}</div>
+    ${exps.map(e => `
+      <div class="exp-item">
+        <div class="exp-item-icon">${CAT_ICONS[e.category] || '📦'}</div>
+        <div class="exp-item-info">
+          <div class="exp-item-desc">${e.description}</div>
+          <div class="exp-item-meta">${e.category} · ${e.profiles?.name || '—'}</div>
+        </div>
+        <div class="exp-item-right">
+          ${e.receipt_url ? `<img src="${e.receipt_url}" class="exp-receipt-thumb" onclick="window.open('${e.receipt_url}','_blank')">` : ''}
+          <div class="exp-item-amount">${fmtCurrency(e.amount)}</div>
+        </div>
+      </div>`).join('')}
+  `).join('');
+}
+
+window.filterExp = function(cat, btn) {
+  document.querySelectorAll('.exp-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderExpenses(cat === 'all' ? expensesData : expensesData.filter(e => e.category === cat));
+};
+
+function fmtDateFull(d) {
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'long' });
+}
+
+window.downloadCSV = function() {
+  const headers = ['Date','Category','Description','Amount (Rs.)','Logged By'];
+  const rows    = expensesData.map(e => [
+    e.expense_date, e.category,
+    `"${(e.description || '').replace(/"/g,'""')}"`,
+    Number(e.amount).toFixed(2),
+    e.profiles?.name || ''
+  ]);
+  const csv  = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = `dover-cottage-expenses-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast('CSV downloaded!', 'success');
+};
+
+// placeholder — replaced in Step 7
+window.openLogExpense = function() { showToast('Expense form coming in the next step!'); };
 
 // ── Always start on the login screen ─────────────────────────────────────
 switchTo('screen-login');
